@@ -7,7 +7,19 @@
     <link rel="stylesheet" href="src/styles/admin.css">
 </head>
 <body>
-    <div class="admin-layout">
+    <div id="admin-gate" class="gate-overlay">
+        <div class="glass gate-card">
+            <span class="logo" style="display: block; margin-bottom: 2rem;">GENBAI</span>
+            <h2>Acceso Restringido</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Ingresa tu clave de acceso</p>
+            <div class="pin-container">
+                <input type="password" id="admin-pin" maxlength="4" placeholder="••••" autofocus>
+            </div>
+            <p id="gate-error" style="color: #ef4444; font-size: 0.8rem; height: 1.2rem; margin-top: 1rem;"></p>
+        </div>
+    </div>
+
+    <div class="admin-layout" style="display: none;">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">

@@ -1,5 +1,47 @@
 import { supabase } from './lib/supabase'
 
+// --- Auth Gate (PIN: 3687) ---
+const gateOverlay = document.getElementById('admin-gate');
+const pinInput = document.getElementById('admin-pin');
+const gateError = document.getElementById('gate-error');
+const adminLayout = document.querySelector('.admin-layout');
+const ADMIN_PIN = '3687';
+
+function checkAuth() {
+    if (sessionStorage.getItem('adminAuthed') === 'true') {
+        gateOverlay.style.display = 'none';
+        adminLayout.style.display = 'flex';
+        return true;
+    }
+    return false;
+}
+
+pinInput?.addEventListener('input', (e) => {
+    const val = e.target.value;
+    if (val.length === 4) {
+        if (val === ADMIN_PIN) {
+            sessionStorage.setItem('adminAuthed', 'true');
+            gateOverlay.style.fadeOut = '0.3s';
+            setTimeout(() => {
+                gateOverlay.style.display = 'none';
+                adminLayout.style.display = 'flex';
+            }, 300);
+        } else {
+            gateError.innerText = 'Clave incorrecta';
+            pinInput.value = '';
+            pinInput.classList.add('shake');
+            setTimeout(() => pinInput.classList.remove('shake'), 400);
+        }
+    } else {
+        gateError.innerText = '';
+    }
+});
+
+// Initial Auth Check
+if (checkAuth()) {
+    console.log('Admin Authenticated');
+}
+
 // --- Theme Management ---
 const themeToggle = document.getElementById('theme-toggle');
 const htmlElement = document.documentElement;

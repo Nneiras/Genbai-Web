@@ -18,6 +18,7 @@
     --border: rgba(255, 255, 255, 0.08);
     --glass-bg: rgba(25, 25, 30, 0.6);
     --glass-border: rgba(255, 255, 255, 0.1);
+    --gate-bg: radial-gradient(circle at center, #1a1a20 0%, #0a0a0c 100%);
 }
 
 [data-theme="light"] {
@@ -150,9 +151,68 @@ body {
     display: block;
 }
 
+/* Admin Gate Styles */
+.gate-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gate-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+}
+
+.gate-card {
+    padding: 3rem;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.pin-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#admin-pin {
+    width: 200px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 2rem;
+    color: var(--text-primary);
+    letter-spacing: 1.5rem;
+    padding-left: 1.5rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+#admin-pin:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+}
+
+.shake {
+    animation: shake 0.2s ease-in-out 0s 2;
+    border-color: #ef4444 !important;
 }
 
 .top-bar {
