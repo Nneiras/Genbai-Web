@@ -1046,6 +1046,28 @@ html:not([data-theme="light"]) .moon-icon {
     height: auto;
   }
   
+  .efficiency-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 3rem;
+  }
+
+  .efficiency-image {
+    width: 100%;
+    max-width: 100%;
+    margin: 2rem auto 0;
+  }
+
+  .efficiency-image img {
+    border-radius: 24px;
+  }
+
+  .benefit-list {
+    text-align: left;
+    max-width: 500px;
+    margin: 2rem auto 0;
+  }
+  
   .about-grid,
   .contact-card {
     grid-template-columns: 1fr;
@@ -1126,7 +1148,12 @@ html:not([data-theme="light"]) .moon-icon {
   .contact-card {
     padding: 1.5rem;
     width: 100%;
+    margin: 0;
+    border-radius: 24px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .contact-info {
@@ -1135,6 +1162,10 @@ html:not([data-theme="light"]) .moon-icon {
 
   .contact-form {
     padding: 0;
+  }
+
+  .efficiency-image {
+    max-width: 100%;
   }
 
   .slider-track .service-card,
