@@ -343,15 +343,23 @@ nav .container {
   position: relative;
   overflow: hidden;
   padding: 2rem 0;
-  margin: 0 -1rem; /* Allow cards to bleed slightly for better visual on mobile */
+  margin: 0 -1rem;
 }
 
 .slider-track {
   display: flex;
   gap: 2rem;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-  will-change: transform;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
   padding: 1rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  -webkit-overflow-scrolling: touch;
+}
+
+.slider-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 /* Specific card widths for sliders */
@@ -361,6 +369,7 @@ nav .container {
   flex: 0 0 calc(33.333% - 1.35rem);
   min-width: 320px;
   height: auto;
+  scroll-snap-align: start;
 }
 
 .slider-controls {
@@ -710,7 +719,23 @@ nav .container {
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-form .form-group input,
+.contact-form .form-group select,
+.contact-form .form-group textarea,
+.contact-form .cta-button {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+.contact-form .w-100 {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group {
@@ -999,7 +1024,28 @@ html:not([data-theme="light"]) .moon-icon {
 }
 
 @media (max-width: 992px) {
-  .hero .container,
+  .hero-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+    padding-top: 4rem;
+  }
+
+  .hero-content {
+    order: 1;
+  }
+
+  .hero-image {
+    order: 2;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: auto;
+  }
+  
   .about-grid,
   .contact-card {
     grid-template-columns: 1fr;
@@ -1027,6 +1073,20 @@ html:not([data-theme="light"]) .moon-icon {
 }
 
 @media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+    letter-spacing: -1px;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  .hero-image {
+    max-width: 80%;
+    margin-top: 2rem;
+  }
+
   .mobile-menu-btn {
     display: flex;
   }
@@ -1035,7 +1095,7 @@ html:not([data-theme="light"]) .moon-icon {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 80%;
+    width: 280px;
     height: 100vh;
     background: var(--nav-bg);
     backdrop-filter: blur(25px);
@@ -1045,6 +1105,8 @@ html:not([data-theme="light"]) .moon-icon {
     gap: 3rem;
     transition: var(--transition-smooth);
     z-index: 1000;
+    margin: 0;
+    padding: 0;
   }
 
   .nav-links.active {
@@ -1053,35 +1115,33 @@ html:not([data-theme="light"]) .moon-icon {
   }
 
   .nav-links a {
-    font-size: 1.5rem;
-  }
-
-  .cta-outline {
-    display: none;
-  }
-  
-  .hero h1 {
-    font-size: 3.5rem;
-  }
-  
-  .process-steps {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-card {
-    padding: 2rem;
-  }
-
-  .efficiency-content {
-    grid-template-columns: 1fr;
+    font-size: 1.3rem;
+    width: 100%;
     text-align: center;
+  }
+
+  .nav-links a::after {
+    bottom: -10px;
+  }
+  .contact-card {
+    padding: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .contact-info {
+    padding: 0;
+  }
+
+  .contact-form {
+    padding: 0;
   }
 
   .slider-track .service-card,
   .slider-track .industry-card,
   .slider-track .blog-card {
-    flex: 0 0 calc(100% - 1rem);
-    min-width: 280px;
+    flex: 0 0 calc(90% - 1rem);
+    min-width: 260px;
   }
 }
 

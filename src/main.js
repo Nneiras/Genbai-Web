@@ -131,34 +131,17 @@ const initSlider = (sliderId, sectionClass) => {
     };
 
     const updateSlider = () => {
-      const visibleCards = getVisibleCards();
-      const maxIndex = Math.max(0, totalCards - visibleCards);
-      if (currentIndex > maxIndex) currentIndex = maxIndex;
-      
-      const cardStyle = window.getComputedStyle(cards[0]);
-      const cardWidth = cards[0].offsetWidth + parseFloat(cardStyle.marginRight || 0) + parseFloat(window.getComputedStyle(sliderTrack).gap || 0);
-      
-      sliderTrack.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+      // Logic for transform is removed as we use native scroll
     };
 
     nextBtn.addEventListener('click', () => {
-      const visibleCards = getVisibleCards();
-      if (currentIndex < totalCards - visibleCards) {
-        currentIndex++;
-      } else {
-        currentIndex = 0; // Loop back
-      }
-      updateSlider();
+      const cardWidth = cards[0].offsetWidth + parseFloat(window.getComputedStyle(sliderTrack).gap || 0);
+      sliderTrack.scrollBy({ left: cardWidth, behavior: 'smooth' });
     });
 
     prevBtn.addEventListener('click', () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-      } else {
-        const visibleCards = getVisibleCards();
-        currentIndex = Math.max(0, totalCards - visibleCards); // Loop to end
-      }
-      updateSlider();
+      const cardWidth = cards[0].offsetWidth + parseFloat(window.getComputedStyle(sliderTrack).gap || 0);
+      sliderTrack.scrollBy({ left: -cardWidth, behavior: 'smooth' });
     });
 
     window.addEventListener('resize', updateSlider);
