@@ -153,6 +153,37 @@ nav .container {
   border-radius: 2px;
 }
 
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1001;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 25px;
+  height: 2px;
+  background: var(--text-main);
+  transition: var(--transition-smooth);
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 .cta-button {
   padding: 0.8rem 1.8rem;
   border-radius: 50px;
@@ -304,9 +335,39 @@ nav .container {
 }
 
 .services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  display: none; /* Replaced by slider */
+}
+
+/* Generalized Slider Styles */
+.slider-container {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 0;
+  margin: 0 -1rem; /* Allow cards to bleed slightly for better visual on mobile */
+}
+
+.slider-track {
+  display: flex;
   gap: 2rem;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+  padding: 1rem;
+}
+
+/* Specific card widths for sliders */
+.slider-track .service-card,
+.slider-track .industry-card,
+.slider-track .blog-card {
+  flex: 0 0 calc(33.333% - 1.35rem);
+  min-width: 320px;
+  height: auto;
+}
+
+.slider-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .service-card {
@@ -853,6 +914,8 @@ html:not([data-theme="light"]) .moon-icon {
   border-radius: 24px;
   overflow: hidden;
   transition: var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
 }
 
 .blog-card:hover {
@@ -956,13 +1019,44 @@ html:not([data-theme="light"]) .moon-icon {
     display: none;
   }
 
-  .slider-track .industry-card {
+  .slider-track .service-card,
+  .slider-track .industry-card,
+  .slider-track .blog-card {
     flex: 0 0 calc(50% - 1rem);
   }
 }
 
 @media (max-width: 768px) {
-  .nav-links, .cta-outline {
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    height: 100vh;
+    background: var(--nav-bg);
+    backdrop-filter: blur(25px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    transition: var(--transition-smooth);
+    z-index: 1000;
+  }
+
+  .nav-links.active {
+    right: 0;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  }
+
+  .nav-links a {
+    font-size: 1.5rem;
+  }
+
+  .cta-outline {
     display: none;
   }
   
@@ -983,8 +1077,11 @@ html:not([data-theme="light"]) .moon-icon {
     text-align: center;
   }
 
-  .slider-track .industry-card {
-    flex: 0 0 100%;
+  .slider-track .service-card,
+  .slider-track .industry-card,
+  .slider-track .blog-card {
+    flex: 0 0 calc(100% - 1rem);
+    min-width: 280px;
   }
 }
 

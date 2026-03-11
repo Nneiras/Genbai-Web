@@ -40,6 +40,11 @@
           <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
         <a href="#contacto" class="cta-button cta-outline">Hablemos</a>
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Abrir menú">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </nav>
@@ -68,21 +73,48 @@
         <p>Soluciones diseñadas para escalar tu productividad y reducir costos operativos.</p>
       </div>
       
-      <div class="services-grid">
-        <div class="service-card">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          <h3>IA para Pymes y Comercios</h3>
-          <p>Desarrollo de software a medida con integraciones de IA para optimizar tus procesos diarios y mejorar la toma de decisiones.</p>
+      <div class="slider-container">
+        <div class="slider-track" id="services-slider">
+          <div class="service-card">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <h3>IA para Pymes y Comercios</h3>
+            <p>Desarrollo de software a medida con integraciones de IA para optimizar tus procesos diarios y mejorar la toma de decisiones.</p>
+          </div>
+          
+          <div class="service-card">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <h3>Asesoría Estratégica en IA</h3>
+            <p>Consultoría especializada para identificar oportunidades de implementación de IA y maximizar el ROI tecnológico de tu empresa.</p>
+          </div>
+
+          <div class="service-card">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+            </svg>
+            <h3>Automatización de Flujos</h3>
+            <p>Eliminamos tareas redundantes mediante bots y algoritmos que trabajan por ti las 24 horas del día.</p>
+          </div>
+
+          <div class="service-card">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <h3>Análisis Predictivo</h3>
+            <p>Anticípate a las tendencias del mercado y al comportamiento de tus clientes con modelos estadísticos avanzados.</p>
+          </div>
         </div>
         
-        <div class="service-card">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <h3>Asesoría Estratégica en IA</h3>
-          <p>Consultoría especializada para identificar oportunidades de implementación de IA y maximizar el ROI tecnológico de tu empresa.</p>
+        <div class="slider-controls">
+          <button class="slider-btn prev-btn" aria-label="Anterior">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="slider-btn next-btn" aria-label="Siguiente">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -260,45 +292,69 @@
         <p>Explora nuestras últimas publicaciones sobre cómo la IA está redefiniendo el mundo empresarial.</p>
       </div>
 
-      <div class="blog-grid">
-        <article class="blog-card" id="blog-1">
-          <div class="blog-image">
-            <img src="/blog-1.png" alt="Futuro de la IA">
-            <span class="blog-tag">Tendencias</span>
-          </div>
-          <div class="blog-content">
-            <span class="blog-date">10 Marzo, 2026</span>
-            <h3>El Futuro de la IA en las Pymes</h3>
-            <p>Cómo la democratización tecnológica está permitiendo que pequeños negocios compitan con gigantes.</p>
-            <a href="javascript:void(0)" class="read-more">Leer más <span>→</span></a>
-          </div>
-        </article>
+      <div class="slider-container">
+        <div class="slider-track" id="blog-slider">
+          <article class="blog-card" id="blog-1">
+            <div class="blog-image">
+              <img src="/blog-1.png" alt="Futuro de la IA">
+              <span class="blog-tag">Tendencias</span>
+            </div>
+            <div class="blog-content">
+              <span class="blog-date">10 Marzo, 2026</span>
+              <h3>El Futuro de la IA en las Pymes</h3>
+              <p>Cómo la democratización tecnológica está permitiendo que pequeños negocios compitan con gigantes.</p>
+              <a href="javascript:void(0)" class="read-more">Leer más <span>→</span></a>
+            </div>
+          </article>
 
-        <article class="blog-card" id="blog-2">
-          <div class="blog-image">
-            <img src="/blog-2.png" alt="Automatización">
-            <span class="blog-tag">Eficiencia</span>
-          </div>
-          <div class="blog-content">
-            <span class="blog-date">08 Marzo, 2026</span>
-            <h3>Automatización: Menos Costos, Más Valor</h3>
-            <p>Estrategias prácticas para implementar flujos de trabajo inteligentes en tu operación diaria.</p>
-            <a href="javascript:void(0)" class="read-more">Leer más <span>→</span></a>
-          </div>
-        </article>
+          <article class="blog-card" id="blog-2">
+            <div class="blog-image">
+              <img src="/blog-2.png" alt="Automatización">
+              <span class="blog-tag">Eficiencia</span>
+            </div>
+            <div class="blog-content">
+              <span class="blog-date">08 Marzo, 2026</span>
+              <h3>Automatización: Menos Costos, Más Valor</h3>
+              <p>Estrategias prácticas para implementar flujos de trabajo inteligentes en tu operación diaria.</p>
+              <a href="javascript:void(0)" class="read-more">Leer más <span>→</span></a>
+            </div>
+          </article>
 
-        <article class="blog-card" id="blog-3">
-          <div class="blog-image">
-            <img src="/blog-3.png" alt="Ética IA">
-            <span class="blog-tag">Ética</span>
-          </div>
-          <div class="blog-content">
-            <span class="blog-date">05 Marzo, 2026</span>
-            <h3>Ética y Responsabilidad en la IA</h3>
-            <p>El equilibrio necesario entre el poder de los algoritmos y la integridad humana en los negocios.</p>
-            <a href="javascript:void(0)" class="read-more">Leer más <span>→</span></a>
-          </div>
-        </article>
+          <article class="blog-card" id="blog-3">
+            <div class="blog-image">
+              <img src="/blog-3.png" alt="Ética IA">
+              <span class="blog-tag">Ética</span>
+            </div>
+            <div class="blog-content">
+              <span class="blog-date">05 Marzo, 2026</span>
+              <h3>Ética y Responsabilidad en la IA</h3>
+              <p>El equilibrio necesario entre el poder de los algoritmos y la integridad humana en los negocios.</p>
+              <a href="javascript:void(0)" class="read-more">Leer más <span>→</span></a>
+            </div>
+          </article>
+
+          <article class="blog-card" id="blog-4">
+            <div class="blog-image">
+              <img src="/efficiency-real.png" alt="ROI Tecnológico">
+              <span class="blog-tag">Negocios</span>
+            </div>
+            <div class="blog-content">
+              <span class="blog-date">01 Marzo, 2026</span>
+              <h3>Midiendo el ROI de la IA</h3>
+              <p>Guía práctica para justificar la inversión tecnológica en tu departamento financiero.</p>
+              <a href="javascript:void(0)" class="read-more">Leer más <span>→</span></a>
+            </div>
+          </article>
+        </div>
+        
+        <div class="slider-controls">
+          <button class="slider-btn prev-btn" aria-label="Anterior">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="slider-btn next-btn" aria-label="Siguiente">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   </section>

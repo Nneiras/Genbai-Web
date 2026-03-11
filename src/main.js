@@ -17,6 +17,23 @@ themeToggle?.addEventListener('click', () => {
   localStorage.setItem('theme', newTheme);
 });
 
+// Mobile Menu Logic
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const navLinks = document.querySelector('.nav-links');
+
+mobileMenuBtn?.addEventListener('click', () => {
+  mobileMenuBtn.classList.toggle('active');
+  navLinks.classList.toggle('active');
+});
+
+// Close mobile menu when a link is clicked
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenuBtn.classList.remove('active');
+    navLinks.classList.remove('active');
+  });
+});
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
@@ -95,54 +112,65 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// Industry Slider Logic
-const sliderTrack = document.getElementById('industry-slider');
-const nextBtn = document.querySelector('.next-btn');
-const prevBtn = document.querySelector('.prev-btn');
+// Generic Slider Logic
+const initSlider = (sliderId, sectionClass) => {
+  const sliderTrack = document.getElementById(sliderId);
+  const section = sliderTrack?.closest('section');
+  const nextBtn = section?.querySelector('.next-btn');
+  const prevBtn = section?.querySelector('.prev-btn');
 
-if (sliderTrack && nextBtn && prevBtn) {
-  let currentIndex = 0;
-  const cards = sliderTrack.querySelectorAll('.industry-card');
-  const totalCards = cards.length;
+  if (sliderTrack && nextBtn && prevBtn) {
+    let currentIndex = 0;
+    const cards = sliderTrack.children;
+    const totalCards = cards.length;
 
-  const getVisibleCards = () => {
-    if (window.innerWidth <= 768) return 1;
-    if (window.innerWidth <= 992) return 2;
-    return 3;
-  };
+    const getVisibleCards = () => {
+      if (window.innerWidth <= 768) return 1;
+      if (window.innerWidth <= 992) return 2;
+      return 3;
+    };
 
-  const updateSlider = () => {
-    const visibleCards = getVisibleCards();
-    const maxIndex = totalCards - visibleCards;
-    if (currentIndex > maxIndex) currentIndex = maxIndex;
-    if (currentIndex < 0) currentIndex = 0;
-
-    const cardWidth = cards[0].offsetWidth + 32; // width + gap
-    sliderTrack.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-  };
-
-  nextBtn.addEventListener('click', () => {
-    const visibleCards = getVisibleCards();
-    if (currentIndex < totalCards - visibleCards) {
-      currentIndex++;
-    } else {
-      currentIndex = 0; // Loop back
-    }
-    updateSlider();
-  });
-
-  prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-    } else {
+    const updateSlider = () => {
       const visibleCards = getVisibleCards();
-      currentIndex = totalCards - visibleCards; // Loop to end
-    }
-    updateSlider();
-  });
+      const maxIndex = Math.max(0, totalCards - visibleCards);
+      if (currentIndex > maxIndex) currentIndex = maxIndex;
+      
+      const cardStyle = window.getComputedStyle(cards[0]);
+      const cardWidth = cards[0].offsetWidth + parseFloat(cardStyle.marginRight || 0) + parseFloat(window.getComputedStyle(sliderTrack).gap || 0);
+      
+      sliderTrack.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    };
 
-  window.addEventListener('resize', updateSlider);
-}
+    nextBtn.addEventListener('click', () => {
+      const visibleCards = getVisibleCards();
+      if (currentIndex < totalCards - visibleCards) {
+        currentIndex++;
+      } else {
+        currentIndex = 0; // Loop back
+      }
+      updateSlider();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+      } else {
+        const visibleCards = getVisibleCards();
+        currentIndex = Math.max(0, totalCards - visibleCards); // Loop to end
+      }
+      updateSlider();
+    });
+
+    window.addEventListener('resize', updateSlider);
+    // Initial update
+    setTimeout(updateSlider, 100);
+  }
+};
+
+// Initialize all sliders
+initSlider('industry-slider');
+initSlider('services-slider');
+initSlider('blog-slider');
 
 // Form Submission with Supabase Integration
 const contactForm = document.getElementById('main-contact-form');
@@ -228,6 +256,17 @@ const blogContent = {
       <p>Con el gran poder de la IA viene una responsabilidad proporcional. En la carrera por la automatización, es fundamental no perder de vista la integridad de los datos y la transparencia algorítmica.</p>
       <p>Un enfoque ético no solo es una obligación moral, sino también una ventaja competitiva: genera confianza en tus clientes y garantiza que las soluciones sean sostenibles a largo plazo.</p>
       <p>Nuestras implementaciones siguen los estándares internacionales de protección de datos y equidad en los procesos de decisión automatizados.</p>
+    `
+  },
+  'blog-4': {
+    title: 'Midiendo el ROI de la IA',
+    tag: 'Negocios',
+    date: '01 Marzo, 2026',
+    image: '/efficiency-real.png',
+    text: `
+      <p>Invertir en inteligencia artificial puede parecer un salto al vacío si no se cuenta con los métricos adecuados para medir su éxito. El Retorno de Inversión (ROI) es la brújula que guía estas decisiones financieras.</p>
+      <p>Para calcularlo correctamente, es necesario considerar tanto el ahorro de costos directos (tiempo de personal, licencias de software antiguo) como las ganancias indirectas (mejora en la satisfacción del cliente, mayor velocidad de respuesta).</p>
+      <p>En este artículo, desglosamos nuestra metodología para auditar el impacto económico de cada implementación personalizada que realizamos.</p>
     `
   }
 };
