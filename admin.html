@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENBAI Admin | Dashboard</title>
+    <link rel="stylesheet" href="src/styles/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="logo">GENBAI</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active">
+                    <span class="icon">📊</span> Dashboard
+                </a>
+                <a href="#leads" class="nav-item">
+                    <span class="icon">👥</span> Leads
+                </a>
+                <a href="#agentes" class="nav-item">
+                    <span class="icon">🤖</span> Agentes IA
+                </a>
+                <a href="#config" class="nav-item">
+                    <span class="icon">⚙️</span> Configuración
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="theme-btn">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                    <span class="btn-text">Cambiar Tema</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1 id="page-title">Panel de Control</h1>
+                <div class="user-info">
+                    <span id="user-name">Admin GENBAI</span>
+                    <div class="avatar">GB</div>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- KPI Cards -->
+                <div class="kpi-card glass">
+                    <div class="kpi-info">
+                        <h3>Leads Totales</h3>
+                        <p class="kpi-value" id="total-leads">0</p>
+                    </div>
+                    <div class="kpi-chart">📈</div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-info">
+                        <h3>Nuevos (24h)</h3>
+                        <p class="kpi-value" id="new-leads">0</p>
+                    </div>
+                    <div class="kpi-chart">✨</div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-info">
+                        <h3>Agentes Activos</h3>
+                        <p class="kpi-value">3</p>
+                    </div>
+                    <div class="kpi-chart">🟢</div>
+                </div>
+            </div>
+
+            <section class="leads-section glass">
+                <div class="section-header">
+                    <h2>Gestión de Leads</h2>
+                    <div class="table-actions">
+                        <input type="text" id="lead-search" placeholder="Buscar lead..." class="search-input">
+                        <select id="status-filter" class="filter-select">
+                            <option value="all">Todos los estados</option>
+                            <option value="new">Nuevos</option>
+                            <option value="contacted">Contactados</option>
+                            <option value="interested">Interesados</option>
+                            <option value="closed">Cerrados</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="leads-table-container">
+                    <table class="leads-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Industria</th>
+                                <th>Email</th>
+                                <th>Estado</th>
+                                <th>Últ. Contacto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-body">
+                            <!-- JS will populate this -->
+                            <tr>
+                                <td colspan="6" style="text-align:center; padding: 2rem;">Cargando leads...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification system for alerts -->
+    <div id="alerts-container"></div>
+
+    <script type="module" src="src/admin.js"></script>
+</body>
+</html>
