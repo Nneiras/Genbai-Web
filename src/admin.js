@@ -69,15 +69,17 @@ function renderLeads(leads) {
                 <td>${lead.industry || '---'}</td>
                 <td>${lead.email}</td>
                 <td>
-                    <span class="status-badge status-${lead.status}">
-                        ${lead.status.toUpperCase()}
-                        ${isOld ? ' ⚠️' : ''}
-                    </span>
+                    <select class="status-select status-${lead.status}" onchange="updateLeadStatus('${lead.id}', this.value)">
+                        <option value="new" ${lead.status === 'new' ? 'selected' : ''}>NUEVO ${isOld ? '⚠️' : ''}</option>
+                        <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>CONTACTADO</option>
+                        <option value="interested" ${lead.status === 'interested' ? 'selected' : ''}>INTERESADO</option>
+                        <option value="closed" ${lead.status === 'closed' ? 'selected' : ''}>CERRADO</option>
+                    </select>
                 </td>
                 <td>${lastContact}</td>
                 <td>
                     <div class="action-btns">
-                        <a href="https://wa.me/${lead.phone || ''}" target="_blank" class="btn-icon" title="WhatsApp">💬</a>
+                        <a href="https://wa.me/${lead.phone?.replace(/\D/g, '') || ''}" target="_blank" class="btn-icon" title="WhatsApp">💬</a>
                         <button class="btn-icon btn-archive" onclick="archiveLead('${lead.id}')" title="Archivar">📦</button>
                         <button class="btn-icon btn-delete" onclick="deleteLead('${lead.id}')" title="Eliminar">🗑️</button>
                     </div>
@@ -117,6 +119,26 @@ searchInput.addEventListener('input', handleFilters);
 statusFilter.addEventListener('change', handleFilters);
 
 // --- Actions (Exposed to Global for Simple onclick) ---
+window.updateLeadStatus = async (id, newStatus) => {
+    try {
+        const updates = { 
+            status: newStatus,
+            last_contacted_at: newStatus === 'contacted' ? new Date().toISOString() : undefined
+        };
+        
+        const { error } = await supabase
+            .from('leads')
+            .update(updates)
+            .eq('id', id);
+            
+        if (error) throw error;
+        fetchLeads();
+    } catch (err) {
+        console.error('Error updating status:', err);
+        alert('Error al actualizar estado');
+    }
+};
+
 window.archiveLead = async (id) => {
     if (!confirm('¿Seguro que deseas archivar este lead?')) return;
     try {
