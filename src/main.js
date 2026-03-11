@@ -1,5 +1,6 @@
 import { supabase } from './lib/supabase'
 import { sendMessageToGemini } from './lib/gemini'
+import { initAudit } from './lib/audit-logic'
 
 // Theme Toggle Logic
 const themeToggle = document.getElementById('theme-toggle');
@@ -341,5 +342,8 @@ chatTextarea?.addEventListener('input', function() {
     this.style.height = 'auto';
     this.style.height = (this.scrollHeight) + 'px';
 });
+
+// Initialize AI Audit
+initAudit();
 
 console.log('GENBAI Landing Page Initialized');

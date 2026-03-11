@@ -64,3 +64,36 @@ export async function sendMessageToGemini(history) {
         return "Hubo un pequeño error técnico al procesar tu mensaje. ¡Pero ya estamos trabajando en ello!";
     }
 }
+
+export async function generateAuditPlan(rubro, proceso, nombre) {
+    const AUDIT_PROMPT = `
+    Eres el consultor senior de IA de GENBAI. 
+    Genera un informe técnico y estratégico para ${nombre}, que opera en el rubro ${rubro} y quiere optimizar el proceso de ${proceso}.
+
+    ESTRUCTURA DEL INFORME (Markdown):
+    1. **Análisis del Rubro**: Describe brevemente los retos actuales de ${rubro}.
+    2. **Propuesta de Solución**: Describe una solución de IA específica para ${proceso} (ej: un bot, un modelo predictivo, etc).
+    3. **Plan de Implementación**: 3 pasos clave (Corto, Mediano y Largo Plazo).
+    4. **Métricas de Impacto**:
+       - Retorno de Inversión (ROI) estimado: [X]%
+       - Reducción de tiempo manual: [X]%
+    
+    Usa un tono premium, convincente y profesional.
+    `;
+
+    try {
+        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ role: 'user', parts: [{ text: AUDIT_PROMPT }] }],
+                generationConfig: { temperature: 0.8 }
+            })
+        });
+        const data = await response.json();
+        return data.candidates[0].content.parts[0].text;
+    } catch (error) {
+        console.error("Audit Generation Error:", error);
+        return "No pudimos generar el informe detallado en este momento. Por favor contacta a un asesor.";
+    }
+}

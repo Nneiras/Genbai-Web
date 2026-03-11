@@ -15,6 +15,7 @@
   <meta property="og:description" content="Transformamos la manera en que operan las Pymes a través de soluciones de software inteligentes.">
   
   <link rel="stylesheet" href="src/styles/chatbot.css">
+  <link rel="stylesheet" href="src/styles/audit.css">
   <meta property="og:image" content="/hero-real.png">
 
   <!-- Twitter -->
@@ -67,6 +68,78 @@
       <div class="hero-bg-visual"></div>
     </div>
   </header>
+
+  <section id="auditoria" class="audit-section">
+    <div class="container">
+      <div class="audit-grid">
+        <div class="audit-content">
+          <span class="hero-tagline">Diagnóstico Gratuito</span>
+          <h2>Transforma tu negocio con <span>IA</span></h2>
+          <p>Descubre qué procesos de tu empresa pueden ser automatizados y recibe un plan estratégico personalizado en segundos.</p>
+          <div class="audit-features">
+            <div class="feat"><span class="icon">📊</span> Análisis de Rubro</div>
+            <div class="feat"><span class="icon">⚡</span> Optimización de Procesos</div>
+            <div class="feat"><span class="icon">📄</span> Informe Estratégico PDF</div>
+          </div>
+        </div>
+
+        <div class="audit-card glass">
+          <div id="audit-steps" class="audit-steps">
+            <!-- Step 1: Industry & Process -->
+            <div id="step-1" class="step active">
+              <h3>¿En qué rubro operas?</h3>
+              <div class="options-grid" id="rubro-options">
+                <button class="option-btn" data-value="Retail">🛍️ Retail</button>
+                <button class="option-btn" data-value="Salud">🏥 Salud</button>
+                <button class="option-btn" data-value="Finanzas">🏦 Finanzas</button>
+                <button class="option-btn" data-value="Educación">🎓 Educación</button>
+                <button class="option-btn" data-value="Inmobiliaria">🏢 Inmobiliaria</button>
+                <button class="option-btn" data-value="Otros">✨ Otros</button>
+              </div>
+              <h3 style="margin-top: 2rem;">¿Qué proceso quieres optimizar?</h3>
+              <div class="options-grid" id="proceso-options">
+                <button class="option-btn" data-value="Ventas">💰 Ventas</button>
+                <button class="option-btn" data-value="Atención">💬 Atención</button>
+                <button class="option-btn" data-value="Logística">📦 Logística</button>
+                <button class="option-btn" data-value="Admin">📋 Admin</button>
+              </div>
+              <button id="next-to-form" class="btn-primary" style="width: 100%; margin-top: 2rem; display: none;">Continuar</button>
+            </div>
+
+            <!-- Step 2: Form -->
+            <div id="step-2" class="step">
+              <h3>Datos de contacto</h3>
+              <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Te enviaremos el plan detallado a tu email.</p>
+              <form id="audit-form" class="audit-form">
+                <input type="text" id="audit-name" placeholder="Tu Nombre" class="audit-input" required>
+                <input type="email" id="audit-email" placeholder="Tu Email" class="audit-input" required>
+                <button type="submit" class="btn-primary">Generar Plan Estratégico</button>
+              </form>
+            </div>
+
+            <!-- Step 3: Loading -->
+            <div id="step-3" class="step">
+              <div style="text-align: center; padding: 2rem;">
+                <div class="loading-spinner"></div>
+                <h3>Analizando tu rubro...</h3>
+                <p>Nuestra IA está diseñando tu plan a medida.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Report Overlay -->
+  <div id="report-overlay" class="report-overlay">
+    <div class="report-container">
+      <button id="close-report" class="close-report">&times;</button>
+      <div id="report-content">
+        <!-- Content injected by JS -->
+      </div>
+    </div>
+  </div>
 
   <section id="servicios" class="section">
     <div class="container">
