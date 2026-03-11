@@ -20,6 +20,57 @@ let allLeads = [];
 const leadsBody = document.getElementById('leads-body');
 const searchInput = document.getElementById('lead-search');
 const statusFilter = document.getElementById('status-filter');
+const navItems = document.querySelectorAll('.nav-item');
+const views = document.querySelectorAll('.admin-view');
+const pageTitle = document.getElementById('page-title');
+
+/**
+ * Handle Tab Switching
+ */
+function switchView(targetId) {
+    const viewId = `view-${targetId.replace('#', '')}`;
+    const targetView = document.getElementById(viewId);
+
+    if (targetView) {
+        // Update active class on views
+        views.forEach(v => v.classList.remove('active'));
+        targetView.classList.add('active');
+
+        // Update active class on nav
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href') === targetId) {
+                item.classList.add('active');
+            }
+        });
+
+        // Update title
+        const titles = {
+            '#dashboard': 'Panel de Control',
+            '#leads': 'Gestión de Leads',
+            '#agentes': 'Agentes IA',
+            '#config': 'Configuración'
+        };
+        pageTitle.innerText = titles[targetId] || 'GENBAI Admin';
+    }
+}
+
+navItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = item.getAttribute('href');
+        window.location.hash = target;
+        switchView(target);
+    });
+});
+
+// Initial View based on hash
+const initialHash = window.location.hash || '#dashboard';
+switchView(initialHash);
+
+window.addEventListener('hashchange', () => {
+    switchView(window.location.hash);
+});
 
 /**
  * Fetch leads from Supabase
@@ -93,10 +144,22 @@ function renderLeads(leads) {
  * Update Dashboard Stats
  */
 function updateStats(leads) {
-    document.getElementById('total-leads').innerText = leads.length;
+    const totalCount = leads.length;
     const today = new Date().setHours(0,0,0,0);
     const newToday = leads.filter(l => new Date(l.created_at) >= today).length;
-    document.getElementById('new-leads').innerText = newToday;
+
+    // Both IDs (leads view and dashboard view)
+    const elements = {
+        'total-leads': totalCount,
+        'total-leads-dash': totalCount,
+        'new-leads': newToday,
+        'new-leads-dash': newToday
+    };
+
+    Object.entries(elements).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = val;
+    });
 }
 
 /**

@@ -46,67 +46,119 @@
                 </div>
             </header>
 
-            <div class="dashboard-grid">
-                <!-- KPI Cards -->
-                <div class="kpi-card glass">
-                    <div class="kpi-info">
-                        <h3>Leads Totales</h3>
-                        <p class="kpi-value" id="total-leads">0</p>
+            <!-- Dashboard View -->
+            <div id="view-dashboard" class="admin-view active">
+                <div class="dashboard-grid">
+                    <div class="kpi-card glass">
+                        <div class="kpi-info">
+                            <h3>Leads Totales</h3>
+                            <p class="kpi-value" id="total-leads-dash">0</p>
+                        </div>
+                        <div class="kpi-chart">📈</div>
                     </div>
-                    <div class="kpi-chart">📈</div>
+                    <div class="kpi-card glass">
+                        <div class="kpi-info">
+                            <h3>Nuevos (24h)</h3>
+                            <p class="kpi-value" id="new-leads-dash">0</p>
+                        </div>
+                        <div class="kpi-chart">✨</div>
+                    </div>
+                    <div class="kpi-card glass">
+                        <div class="kpi-info">
+                            <h3>Agentes Activos</h3>
+                            <p class="kpi-value">3</p>
+                        </div>
+                        <div class="kpi-chart">🟢</div>
+                    </div>
                 </div>
-                <div class="kpi-card glass">
-                    <div class="kpi-info">
-                        <h3>Nuevos (24h)</h3>
-                        <p class="kpi-value" id="new-leads">0</p>
-                    </div>
-                    <div class="kpi-chart">✨</div>
-                </div>
-                <div class="kpi-card glass">
-                    <div class="kpi-info">
-                        <h3>Agentes Activos</h3>
-                        <p class="kpi-value">3</p>
-                    </div>
-                    <div class="kpi-chart">🟢</div>
+                
+                <div class="glass" style="padding: 2rem; margin-top: 2rem;">
+                    <h3>Actividad Reciente</h3>
+                    <p style="color: var(--text-secondary); margin-top: 1rem;">Próximamente: Historial de interacciones y logs de agentes.</p>
                 </div>
             </div>
 
-            <section class="leads-section glass">
+            <!-- Leads View -->
+            <div id="view-leads" class="admin-view">
+                <section class="leads-section glass">
+                    <div class="section-header">
+                        <h2>Gestión de Leads</h2>
+                        <div class="table-actions">
+                            <input type="text" id="lead-search" placeholder="Buscar lead..." class="search-input">
+                            <select id="status-filter" class="filter-select">
+                                <option value="all">Todos los estados</option>
+                                <option value="new">Nuevos</option>
+                                <option value="contacted">Contactados</option>
+                                <option value="interested">Interesados</option>
+                                <option value="closed">Cerrados</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="leads-table-container">
+                        <table class="leads-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Industria</th>
+                                    <th>Email</th>
+                                    <th>Estado</th>
+                                    <th>Últ. Contacto</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leads-body">
+                                <tr>
+                                    <td colspan="6" style="text-align:center; padding: 2rem;">Cargando leads...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Agentes View -->
+            <div id="view-agentes" class="admin-view">
                 <div class="section-header">
-                    <h2>Gestión de Leads</h2>
-                    <div class="table-actions">
-                        <input type="text" id="lead-search" placeholder="Buscar lead..." class="search-input">
-                        <select id="status-filter" class="filter-select">
-                            <option value="all">Todos los estados</option>
-                            <option value="new">Nuevos</option>
-                            <option value="contacted">Contactados</option>
-                            <option value="interested">Interesados</option>
-                            <option value="closed">Cerrados</option>
-                        </select>
+                    <h2>Agentes de IA</h2>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="glass kpi-card" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
+                        <div style="font-size: 1.5rem;">🤖 Atención Pública</div>
+                        <p style="color: var(--text-secondary);">Chatbot para resolver dudas de clientes en la web.</p>
+                        <span class="status-badge status-new">ACTIVO</span>
+                    </div>
+                    <div class="glass kpi-card" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
+                        <div style="font-size: 1.5rem;">✍️ Generador de Contenido</div>
+                        <p style="color: var(--text-secondary);">IA para redactar blogs y posts de redes sociales.</p>
+                        <span class="status-badge status-closed">PAUSADO</span>
+                    </div>
+                    <div class="glass kpi-card" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
+                        <div style="font-size: 1.5rem;">📋 Cotizador Automático</div>
+                        <p style="color: var(--text-secondary);">Analiza leads y propone presupuestos personalizados.</p>
+                        <span class="status-badge status-contacted">CONFIGURANDO</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="leads-table-container">
-                    <table class="leads-table">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Industria</th>
-                                <th>Email</th>
-                                <th>Estado</th>
-                                <th>Últ. Contacto</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leads-body">
-                            <!-- JS will populate this -->
-                            <tr>
-                                <td colspan="6" style="text-align:center; padding: 2rem;">Cargando leads...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Config View -->
+            <div id="view-config" class="admin-view">
+                <div class="section-header">
+                    <h2>Configuración de la Cuenta</h2>
                 </div>
-            </section>
+                <div class="glass" style="padding: 2rem; max-width: 600px;">
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Conexión Supabase</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Las credenciales se gestionan vía variables de entorno en Vercel.</p>
+                    </div>
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Perfil del Administrador</h3>
+                        <p><strong>Usuario:</strong> Admin GENBAI</p>
+                        <p><strong>Email:</strong> nneiras@genbai.com</p>
+                    </div>
+                    <button class="btn-icon" style="width: auto; padding: 0.5rem 1rem; background: #ef4444; color: white;">Cerrar Sesión</button>
+                </div>
+            </div>
         </main>
     </div>
 
