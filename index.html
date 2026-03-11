@@ -13,6 +13,8 @@
   <meta property="og:url" content="https://genbai.com/">
   <meta property="og:title" content="GENBAI | IA para Pymes y Comercios">
   <meta property="og:description" content="Transformamos la manera en que operan las Pymes a través de soluciones de software inteligentes.">
+  
+  <link rel="stylesheet" href="src/styles/chatbot.css">
   <meta property="og:image" content="/hero-real.png">
 
   <!-- Twitter -->
@@ -496,6 +498,37 @@
         <h2 id="modal-title">Título del Blog</h2>
         <div id="modal-text" class="blog-text">
           <!-- Dinamic Content -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENBAI Chatbot -->
+  <div class="chatbot-container">
+    <button class="chatbot-trigger" id="chatbot-trigger" aria-label="Abrir Chat">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.821.487 3.53 1.338 5L2 22l5-1.338c1.47.851 3.179 1.338 5 1.338 5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.477 0-2.873-.406-4.074-1.112l-2.426.65.65-2.426C5.406 15.873 5 14.477 5 13c0-3.859 3.141-7 7-7s7 3.141 7 7-3.141 7-7 7z"/></svg>
+    </button>
+    <div class="chatbot-window" id="chatbot-window">
+      <div class="chat-header">
+        <div class="chat-profile">
+          <div class="bot-avatar">GB</div>
+          <div class="bot-info">
+            <h4>GenAI</h4>
+            <span>Experto en IA</span>
+          </div>
+        </div>
+        <button class="chat-close" id="chat-close">&times;</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="message bot">¡Hola! Soy GenAI. ¿Cómo puedo ayudar a potenciar tu negocio hoy con Inteligencia Artificial?</div>
+      </div>
+      <div class="chat-footer">
+        <div class="typing-indicator" id="typing-indicator">GenAI está escribiendo...</div>
+        <div class="chat-input-container">
+          <textarea id="chat-textarea" placeholder="Escribe tu mensaje..." rows="1"></textarea>
+          <button class="send-btn" id="send-chat" title="Enviar">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
         </div>
       </div>
     </div>

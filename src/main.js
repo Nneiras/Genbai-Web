@@ -1,5 +1,5 @@
-import './styles/main.css'
 import { supabase } from './lib/supabase'
+import { sendMessageToGemini } from './lib/gemini'
 
 // Theme Toggle Logic
 const themeToggle = document.getElementById('theme-toggle');
@@ -278,12 +278,68 @@ modalClose?.addEventListener('click', () => {
   document.body.style.overflow = 'auto';
 });
 
-// Close polar click outside content
-blogModal?.addEventListener('click', (e) => {
-  if (e.target === blogModal) {
-    blogModal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-  }
+// --- Chatbot Display Logic ---
+const chatTrigger = document.getElementById('chatbot-trigger');
+const chatWindow = document.getElementById('chatbot-window');
+const chatClose = document.getElementById('chat-close');
+const chatMessages = document.getElementById('chat-messages');
+const chatTextarea = document.getElementById('chat-textarea');
+const sendChatBtn = document.getElementById('send-chat');
+const typingIndicator = document.getElementById('typing-indicator');
+
+let chatHistory = [];
+
+const toggleChat = () => {
+    chatWindow.classList.toggle('active');
+    if(chatWindow.classList.contains('active')) {
+        chatTextarea.focus();
+    }
+};
+
+chatTrigger?.addEventListener('click', toggleChat);
+chatClose?.addEventListener('click', toggleChat);
+
+const addMessage = (text, role) => {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${role}`;
+    msgDiv.innerText = text;
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+};
+
+const handleSend = async () => {
+    const text = chatTextarea.value.trim();
+    if (!text) return;
+
+    // User Message
+    addMessage(text, 'user');
+    chatTextarea.value = '';
+    chatTextarea.style.height = 'auto';
+    
+    // Add to history for Gemini
+    chatHistory.push({ role: 'user', parts: [{ text }] });
+
+    // Bot Response
+    typingIndicator.style.display = 'block';
+    const response = await sendMessageToGemini(chatHistory);
+    typingIndicator.style.display = 'none';
+
+    addMessage(response, 'bot');
+    chatHistory.push({ role: 'model', parts: [{ text: response }] });
+};
+
+sendChatBtn?.addEventListener('click', handleSend);
+chatTextarea?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+    }
+});
+
+// Auto-resize textarea
+chatTextarea?.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
 });
 
 console.log('GENBAI Landing Page Initialized');
