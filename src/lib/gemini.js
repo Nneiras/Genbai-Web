@@ -3,7 +3,7 @@
  */
 
 const API_KEY = import.meta.env.GOOGLE_API_GEMINI;
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+const API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
 
 const SYSTEM_PROMPT = `
 Eres GenAI, el asistente experto en inteligencia artificial de GENBAI (genbai.com).
