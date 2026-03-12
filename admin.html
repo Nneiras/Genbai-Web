@@ -177,7 +177,37 @@
                         <p><strong>Usuario:</strong> Admin GENBAI</p>
                         <p><strong>Email:</strong> nneiras@genbai.com</p>
                     </div>
-                    <button class="btn-icon" style="width: auto; padding: 0.5rem 1rem; background: #ef4444; color: white;">Cerrar Sesión</button>
+                <button class="btn-icon" style="width: auto; padding: 0.5rem 1rem; background: #ef4444; color: white;">Cerrar Sesión</button>
+            </div>
+
+            <!-- Agent Editor Panel (Hidden by default) -->
+            <div id="agent-editor" class="agent-editor-panel glass" style="display: none;">
+                <div class="editor-header">
+                    <div class="editor-title-box">
+                        <h3 id="edit-agent-name">Nombre del Agente</h3>
+                        <span id="edit-agent-id" class="agent-id-badge">ID: ---</span>
+                    </div>
+                    <div class="editor-actions">
+                        <button id="save-agent" class="btn-bulk btn-warning">Guardar Cambios</button>
+                        <button id="close-agent-editor" class="btn-icon"><i data-lucide="x"></i></button>
+                    </div>
+                </div>
+                
+                <div class="editor-body">
+                    <div class="editor-section">
+                        <label>Personalidad y Prompt de Sistema</label>
+                        <textarea id="edit-agent-prompt" placeholder="Define cómo actúa el agente..." class="prompt-textarea"></textarea>
+                    </div>
+                    
+                    <div class="editor-section">
+                        <label>Flujo de Trabajo (Pasos)</label>
+                        <div id="steps-container" class="steps-list">
+                            <!-- Steps injected by JS -->
+                        </div>
+                        <button id="add-step" class="btn-icon-text">
+                            <i data-lucide="plus"></i> Agregar Paso
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>
