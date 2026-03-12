@@ -115,8 +115,6 @@ window.addEventListener('hashchange', () => {
     switchView(window.location.hash);
     if (window.location.hash === '#config') fetchAgents();
 });
-    switchView(window.location.hash);
-});
 
 /**
  * Fetch leads from Supabase
