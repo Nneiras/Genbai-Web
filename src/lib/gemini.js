@@ -7,11 +7,12 @@ const BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
 // Try different models if one fails. Added 2.0 and 2.5 based on user console.
 const MODELS = [
-    "gemini-2.0-flash", 
-    "gemini-2.0-flash-001",
-    "gemini-1.5-flash", 
-    "gemini-1.5-flash-latest", 
-    "gemini-1.5-pro",
+    "gemini-2.5-flash",
+    "gemini-flash-latest",
+    "gemini-2.5-pro",
+    "gemini-pro-latest",
+    "gemini-2.0-flash-lite",
+    "gemini-1.5-flash",
     "gemini-2.0-flash-exp"
 ];
 
