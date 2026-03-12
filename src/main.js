@@ -181,7 +181,7 @@ if (contactForm) {
 
     try {
       // 1. Try to save to Supabase
-      const { error } = await supabase.from('leads').insert([leadData]);
+      const { error } = await supabase.from('leads').insert([leadData]).select();
 
       if (error) throw error;
 

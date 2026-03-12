@@ -37,8 +37,8 @@ ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE budgets ENABLE ROW LEVEL SECURITY;
 
--- Create policies (Example: Allow anyone to insert leads from the landing page)
-CREATE POLICY "Enable insert for everyone" ON leads FOR INSERT WITH CHECK (true);
+-- Create policies (Allow anyone to insert leads from the landing page)
+CREATE POLICY "Enable insert for everyone" ON leads FOR INSERT TO public WITH CHECK (true);
 
 -- Policy to allow authenticated users (staff) to see all leads
-CREATE POLICY "Allow authenticated users to read leads" ON leads FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated users to read leads" ON leads FOR SELECT TO authenticated USING (true);

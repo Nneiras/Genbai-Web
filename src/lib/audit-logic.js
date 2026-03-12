@@ -79,7 +79,7 @@ export function initAudit() {
             }]).select();
             
             if (error) throw error;
-            console.log("Lead guardado exitosamente:", data);
+            console.log("Lead guardado exitosamente");
             return data;
         } catch (err) {
             console.error("Error saving audit lead to Supabase:", err);
@@ -166,7 +166,7 @@ export function initAudit() {
                  industry: selection.rubro,
                  message: `SOLICITUD COTIZACIÓN SOBRE AUDITORÍA PREVIA (${selection.proceso}). El cliente quiere avanzar con la implementación.`,
                  status: 'interested'
-             }]);
+             }]).select();
 
              document.getElementById('quote-actions').style.display = 'none';
              document.getElementById('quote-success-msg').style.display = 'block';
