@@ -501,28 +501,36 @@ async function fetchAgents() {
 
 function renderAgents(agents) {
     console.log('Rendering agents...', agents);
-    if (!agentsListContainer) {
-        console.error('agentsListContainer is missing in the DOM');
-        return;
-    }
+    if (!agentsListContainer) return;
 
     if (!agents || agents.length === 0) {
         agentsListContainer.innerHTML = '<div class="glass kpi-card">No se encontraron agentes. Asegúrate de ejecutar el script SQL.</div>';
         return;
     }
 
+    const agentIcons = {
+        'chatbot-admin': '💬',
+        'lead-strategist': '💡',
+        'followup-specialist': '📊'
+    };
+
     agentsListContainer.innerHTML = agents.map(agent => `
         <div class="glass kpi-card agent-card" onclick="openAgentEditor('${agent.id}')">
             <div class="agent-card-header">
-                <div class="agent-icon-box">🤖</div>
+                <div class="agent-icon-box">${agentIcons[agent.id] || '🤖'}</div>
                 <span class="status-badge ${agent.is_active ? 'status-new' : 'status-closed'}">
                     ${agent.is_active ? 'ACTIVO' : 'PAUSADO'}
                 </span>
             </div>
-            <h3>${agent.name}</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">${agent.description || 'Sin descripción'}</p>
+            <div class="agent-card-body">
+                <h3>${agent.name}</h3>
+                <p>${agent.description || 'Sin descripción'}</p>
+            </div>
             <div class="agent-card-footer">
-                <span class="steps-count"><i data-lucide="list"></i> ${JSON.parse(JSON.stringify(agent.workflow_steps || [])).length} pasos</span>
+                <span class="steps-count">
+                    <i data-lucide="list"></i> 
+                    ${agent.workflow_steps ? JSON.parse(JSON.stringify(agent.workflow_steps)).length : 0} pasos
+                </span>
                 <span class="edit-link">Configurar <i data-lucide="chevron-right"></i></span>
             </div>
         </div>
