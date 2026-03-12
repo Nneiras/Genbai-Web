@@ -91,6 +91,18 @@ export async function generateAuditPlan(rubro, proceso, nombre) {
             })
         });
         const data = await response.json();
+        
+        if (data.error) {
+            if (data.error.code === 429) {
+                return "Estamos recibiendo muchas solicitudes. Por favor, intenta de nuevo en unos minutos o contacta a un asesor directamente.";
+            }
+            throw new Error(data.error.message);
+        }
+
+        if (!data.candidates || !data.candidates[0]) {
+            throw new Error("No se pudo generar una respuesta clara.");
+        }
+
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
         console.error("Audit Generation Error:", error);

@@ -66,7 +66,7 @@ export function initAudit() {
     async function saveAuditLead(name, email, rubro, proceso) {
         try {
             const { error } = await supabase.from('leads').insert([{
-                full_name: name,
+                name: name,
                 email: email,
                 industry: rubro,
                 message: `AUDITORÍA IA: Interesado en optimizar ${proceso}.`,
