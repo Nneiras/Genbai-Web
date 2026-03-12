@@ -46,28 +46,45 @@ export function initAudit() {
         steps[2].classList.remove('active');
         steps[3].classList.add('active');
 
-        // Save Lead to Supabase
-        await saveAuditLead(nombre, email, selection.rubro, selection.proceso);
+        try {
+            // 1. Generate Plan with Gemini
+            const plan = await generateAuditPlan(selection.rubro, selection.proceso, nombre);
 
-        // Generate Plan with Gemini
-        const plan = await generateAuditPlan(selection.rubro, selection.proceso, nombre);
+            // 2. Save Lead to Supabase with the report
+            await saveAuditLead(nombre, email, selection.rubro, selection.proceso, plan);
 
-        // Show Report
-        showReport(plan, nombre);
+            // Show Report
+            showReport(plan, nombre);
+        } catch (error) {
+            console.error("Critical Audit Error:", error);
+            // Fallback for user experience
+            const fallbackPlan = "No pudimos generar el informe detallado, pero hemos guardado tus datos y un consultor te contactará pronto.";
+            await saveAuditLead(nombre, email, selection.rubro, selection.proceso, `ERROR EN GENERACIÓN: ${error.message}`);
+            showReport(fallbackPlan, nombre);
+        }
     });
 
-    async function saveAuditLead(name, email, rubro, proceso) {
+    async function saveAuditLead(name, email, rubro, proceso, planContent = '') {
+        const fullMessage = planContent 
+            ? `SOLICITUD DE AUDITORÍA IA\n-------------------------\nPROCESO: ${proceso}\n\nREPORTE GENERADO:\n${planContent}`
+            : `AUDITORÍA IA: Interesado en optimizar ${proceso}.`;
+
         try {
-            const { error } = await supabase.from('leads').insert([{
+            const { data, error } = await supabase.from('leads').insert([{
                 name: name,
                 email: email,
                 industry: rubro,
-                message: `AUDITORÍA IA: Interesado en optimizar ${proceso}.`,
+                message: fullMessage,
                 status: 'new'
-            }]);
+            }]).select();
+            
             if (error) throw error;
+            console.log("Lead guardado exitosamente:", data);
+            return data;
         } catch (err) {
-            console.error("Error saving audit lead:", err);
+            console.error("Error saving audit lead to Supabase:", err);
+            // We don't throw here to avoid blocking the UI if only the save fails, 
+            // but we log it clearly.
         }
     }
 
@@ -141,12 +158,13 @@ export function initAudit() {
              btn.innerText = "Procesando...";
              btn.disabled = true;
 
-             // Log quote request in Supabase (Update lead or send special event)
+             // Update lead instead of creating a new one (simulated by finding by email if we don't have ID)
+             // For simplicity, we create a specialized follow-up lead
              await supabase.from('leads').insert([{
                  name: nombre,
                  email: document.getElementById('audit-email').value,
                  industry: selection.rubro,
-                 message: `SOLICITUD COTIZACIÓN AUDITORÍA: El usuario ${nombre} quiere cotizar el plan generado para ${selection.proceso}.`,
+                 message: `SOLICITUD COTIZACIÓN SOBRE AUDITORÍA PREVIA (${selection.proceso}). El cliente quiere avanzar con la implementación.`,
                  status: 'interested'
              }]);
 
