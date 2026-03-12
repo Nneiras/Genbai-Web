@@ -660,15 +660,20 @@ body {
 }
 
 .agent-icon-box {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     background: rgba(59, 130, 246, 0.1);
     border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    color: var(--accent);
+}
+
+.agent-icon-box i {
+    width: 20px;
+    height: 20px;
 }
 
 .agent-card-body {
@@ -689,6 +694,7 @@ body {
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

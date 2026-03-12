@@ -509,15 +509,17 @@ function renderAgents(agents) {
     }
 
     const agentIcons = {
-        'chatbot-admin': '💬',
-        'lead-strategist': '💡',
-        'followup-specialist': '📊'
+        'chatbot-admin': 'message-square',
+        'lead-strategist': 'zap',
+        'followup-specialist': 'line-chart'
     };
 
     agentsListContainer.innerHTML = agents.map(agent => `
         <div class="glass kpi-card agent-card" onclick="openAgentEditor('${agent.id}')">
             <div class="agent-card-header">
-                <div class="agent-icon-box">${agentIcons[agent.id] || '🤖'}</div>
+                <div class="agent-icon-box">
+                    <i data-lucide="${agentIcons[agent.id] || 'bot'}"></i>
+                </div>
                 <span class="status-badge ${agent.is_active ? 'status-new' : 'status-closed'}">
                     ${agent.is_active ? 'ACTIVO' : 'PAUSADO'}
                 </span>
