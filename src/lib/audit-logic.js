@@ -184,10 +184,6 @@ export function initAudit() {
              document.getElementById('quote-actions').style.display = 'none';
              document.getElementById('quote-success-msg').style.display = 'block';
         });
-
-             document.getElementById('quote-actions').style.display = 'none';
-             document.getElementById('quote-success-msg').style.display = 'block';
-        });
     }
 
     closeReport?.addEventListener('click', () => {
