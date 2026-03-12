@@ -159,8 +159,14 @@ function renderLeads(leads) {
                     <div style="font-weight: 600;">${lead.name}</div>
                     <div style="font-size: 0.8rem; color: var(--text-secondary);">${date}</div>
                 </td>
-                <td>${lead.industry || '---'}</td>
+                <td>
+                    <div style="font-size: 0.9rem; font-weight: 500;">${lead.industry || '---'}</div>
+                    <div style="font-size: 0.75rem; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
+                        ${lead.message?.includes('AUDITORÍA') ? '🔍 Auditoría IA' : '📧 Contacto Directo'}
+                    </div>
+                </td>
                 <td>${lead.email}</td>
+                <td title="${lead.message}">${lead.message || '---'}</td>
                 <td>
                     <select class="status-select status-${lead.status}" onchange="updateLeadStatus('${lead.id}', this.value)">
                         <option value="new" ${lead.status === 'new' ? 'selected' : ''}>NUEVO ${isOld ? '⚠️' : ''}</option>

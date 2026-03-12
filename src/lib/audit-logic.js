@@ -6,8 +6,8 @@ import { supabase } from './supabase.js';
  */
 
 export function initAudit() {
-    const rubroBtns = document.querySelectorAll('#rubro-options .option-btn');
-    const procesoBtns = document.querySelectorAll('#proceso-options .option-btn');
+    const rubroSelect = document.getElementById('rubro-select');
+    const procesoSelect = document.getElementById('proceso-select');
     const nextBtn = document.getElementById('next-to-form');
     const auditForm = document.getElementById('audit-form');
     const steps = {
@@ -21,23 +21,16 @@ export function initAudit() {
 
     let selection = { rubro: '', proceso: '' };
 
-    function updateSelection(type, value, btns) {
-        selection[type] = value;
-        btns.forEach(btn => btn.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-        
-        if (selection.rubro && selection.proceso) {
+    function checkSelection() {
+        if (rubroSelect.value && procesoSelect.value) {
             nextBtn.style.display = 'block';
+            selection.rubro = rubroSelect.value;
+            selection.proceso = procesoSelect.value;
         }
     }
 
-    rubroBtns.forEach(btn => btn.addEventListener('click', (e) => {
-        updateSelection('rubro', btn.dataset.value, rubroBtns);
-    }));
-
-    procesoBtns.forEach(btn => btn.addEventListener('click', (e) => {
-        updateSelection('proceso', btn.dataset.value, procesoBtns);
-    }));
+    rubroSelect?.addEventListener('change', checkSelection);
+    procesoSelect?.addEventListener('change', checkSelection);
 
     nextBtn?.addEventListener('click', () => {
         steps[1].classList.remove('active');
@@ -79,7 +72,6 @@ export function initAudit() {
     }
 
     function showReport(plan, nombre) {
-        // Simple Markdown-ish to HTML conversion for the report
         const formattedPlan = plan
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\n\n/g, '</p><p>')
@@ -87,29 +79,50 @@ export function initAudit() {
 
         reportContent.innerHTML = `
             <div class="report-header">
-                <span class="hero-tagline">Resultado de tu Auditoría</span>
-                <h3>Plan Estratégico para ${nombre}</h3>
+                <span class="hero-tagline">Reporte de Auditoría IA</span>
+                <h3>Plan Estratégico: ${nombre}</h3>
             </div>
             <div class="report-body">
                 <div class="report-section">
                     <p>${formattedPlan}</p>
                 </div>
                 
-                <div class="metrics-visual">
-                    <div class="metric-box">
-                        <div class="metric-value">70%</div>
-                        <div class="metric-label">Eficiencia Operativa</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-value">X10</div>
-                        <div class="metric-label">Escalabilidad</div>
+                <div class="projection-chart">
+                    <h4>Proyección de Eficiencia</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px;">Reducción estimada de carga operativa manual.</p>
+                    <div class="chart-bars">
+                        <div class="bar-container">
+                            <div class="bar before"></div>
+                            <span class="bar-label">Actual</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar after" id="ai-bar"></div>
+                            <span class="bar-label">Con IA</span>
+                        </div>
                     </div>
                 </div>
 
-                <div style="text-align: center; margin-top: 3rem;">
-                    <p style="margin-bottom: 1.5rem;">¿Te gustaría implementar este plan con nosotros?</p>
-                    <button id="cta-quote" class="btn-primary" style="padding: 1rem 2rem;">Solicitar Cotización de este Plan</button>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 1rem;">Un consultor senior analizará la complejidad y te contactará.</p>
+                <div class="metrics-visual">
+                    <div class="metric-box">
+                        <div class="metric-value">75%</div>
+                        <div class="metric-label">ROI Estimado</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">X5</div>
+                        <div class="metric-label">Velocidad</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 4rem; padding: 2rem; background: rgba(59, 130, 246, 0.05); border-radius: 20px;">
+                    <div id="quote-success-msg" style="display: none; animation: fadeIn 0.5s;">
+                        <h4 style="color: #4ade80; margin-bottom: 10px;">¡Solicitud recibida!</h4>
+                        <p>Un consultor senior analizará tu caso y te enviará la propuesta detallada por email en menos de 24hs.</p>
+                    </div>
+                    <div id="quote-actions">
+                        <p style="margin-bottom: 1.5rem; font-weight: 500;">¿Te gustaría implementar este plan?</p>
+                        <button id="cta-quote" class="btn-primary" style="padding: 1.2rem 3rem; font-size: 1.1rem;">Solicitar Cotización Detallada</button>
+                        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 1rem;">Recibirás el presupuesto formal en tu casilla de correo.</p>
+                    </div>
                 </div>
             </div>
         `;
@@ -117,11 +130,28 @@ export function initAudit() {
         reportOverlay.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
-        document.getElementById('cta-quote')?.addEventListener('click', () => {
-             reportOverlay.style.display = 'none';
-             document.body.style.overflow = 'auto';
-             // Scroll to main contact or open chatbot
-             document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
+        // Animate bar
+        setTimeout(() => {
+            const bar = document.getElementById('ai-bar');
+            if (bar) bar.style.height = '30%';
+        }, 300);
+
+        document.getElementById('cta-quote')?.addEventListener('click', async () => {
+             const btn = document.getElementById('cta-quote');
+             btn.innerText = "Procesando...";
+             btn.disabled = true;
+
+             // Log quote request in Supabase (Update lead or send special event)
+             await supabase.from('leads').insert([{
+                 name: nombre,
+                 email: document.getElementById('audit-email').value,
+                 industry: selection.rubro,
+                 message: `SOLICITUD COTIZACIÓN AUDITORÍA: El usuario ${nombre} quiere cotizar el plan generado para ${selection.proceso}.`,
+                 status: 'interested'
+             }]);
+
+             document.getElementById('quote-actions').style.display = 'none';
+             document.getElementById('quote-success-msg').style.display = 'block';
         });
     }
 

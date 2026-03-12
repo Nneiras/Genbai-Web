@@ -86,25 +86,38 @@
 
         <div class="audit-card glass">
           <div id="audit-steps" class="audit-steps">
-            <!-- Step 1: Industry & Process -->
+            <!-- Step 1: Industry & Process Selection -->
             <div id="step-1" class="step active">
-              <h3>¿En qué rubro operas?</h3>
-              <div class="options-grid" id="rubro-options">
-                <button class="option-btn" data-value="Retail">🛍️ Retail</button>
-                <button class="option-btn" data-value="Salud">🏥 Salud</button>
-                <button class="option-btn" data-value="Finanzas">🏦 Finanzas</button>
-                <button class="option-btn" data-value="Educación">🎓 Educación</button>
-                <button class="option-btn" data-value="Inmobiliaria">🏢 Inmobiliaria</button>
-                <button class="option-btn" data-value="Otros">✨ Otros</button>
+              <h4 style="margin-bottom: 20px;">1. Define tu perfil</h4>
+              
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label for="rubro-select" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; display: block;">¿En qué rubro operas?</label>
+                <select id="rubro-select" class="audit-select">
+                  <option value="" disabled selected>Selecciona una opción...</option>
+                  <option value="Servicios Profesionales">Servicios Profesionales</option>
+                  <option value="Estudio Contable / Legal">Estudio Contable / Legal</option>
+                  <option value="Salud y Medicina">Salud y Medicina</option>
+                  <option value="Retail y E-commerce">Retail y E-commerce</option>
+                  <option value="Gastronomía">Gastronomía</option>
+                  <option value="Logística y Transporte">Logística y Transporte</option>
+                  <option value="Inmobiliario">Inmobiliario</option>
+                  <option value="Otro">Otro</option>
+                </select>
               </div>
-              <h3 style="margin-top: 2rem;">¿Qué proceso quieres optimizar?</h3>
-              <div class="options-grid" id="proceso-options">
-                <button class="option-btn" data-value="Ventas">💰 Ventas</button>
-                <button class="option-btn" data-value="Atención">💬 Atención</button>
-                <button class="option-btn" data-value="Logística">📦 Logística</button>
-                <button class="option-btn" data-value="Admin">📋 Admin</button>
+
+              <div class="form-group" style="margin-bottom: 30px;">
+                <label for="proceso-select" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; display: block;">¿Qué proceso quieres optimizar?</label>
+                <select id="proceso-select" class="audit-select">
+                  <option value="" disabled selected>Selecciona una opción...</option>
+                  <option value="Atención al Cliente">Atención al Cliente (Chatbots)</option>
+                  <option value="Ventas y Seguimiento">Ventas y Seguimiento</option>
+                  <option value="Generación de Contenido">Generación de Contenido</option>
+                  <option value="Análisis de Datos">Análisis de Datos</option>
+                  <option value="Gestión Interna">Gestión Interna / Backoffice</option>
+                </select>
               </div>
-              <button id="next-to-form" class="btn-primary" style="width: 100%; margin-top: 2rem; display: none;">Continuar</button>
+
+              <button id="next-to-form" class="btn-primary" style="display: none; width: 100%;">Continuar</button>
             </div>
 
             <!-- Step 2: Form -->

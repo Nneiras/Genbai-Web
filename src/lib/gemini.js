@@ -95,17 +95,23 @@ export async function sendMessageToGemini(history) {
 export async function generateAuditPlan(rubro, proceso, nombre) {
     const AUDIT_PROMPT = `
     Eres el consultor senior de IA de GENBAI. 
-    Genera un informe técnico y estratégico para ${nombre}, que opera en el rubro ${rubro} y quiere optimizar el proceso de ${proceso}.
+    Genera un informe estratégico ultra-conciso para ${nombre} (${rubro}) sobre la optimización de ${proceso}.
 
-    ESTRUCTURA DEL INFORME (Markdown):
-    1. **Análisis del Rubro**: Describe brevemente los retos actuales de ${rubro}.
-    2. **Propuesta de Solución**: Describe una solución de IA específica para ${proceso} (ej: un bot, un modelo predictivo, etc).
-    3. **Plan de Implementación**: 3 pasos clave (Corto, Mediano y Largo Plazo).
-    4. **Métricas de Impacto**:
-       - Retorno de Inversión (ROI) estimado: [X]%
-       - Reducción de tiempo manual: [X]%
-    
-    Usa un tono premium, convincente y profesional.
+    ESTRUCTURA (Usa Markdown):
+    ### 1. Diagnóstico del Sector
+    (Máximo 3 líneas sobre retos en ${rubro})
+
+    ### 2. Solución Propuesta (IA)
+    (Describe UNA solución clave para ${proceso})
+
+    ### 3. Implementación en 3 Pasos
+    (Paso 1, 2 y 3 cortos)
+
+    ### 4. Impacto Esperado
+    - Reducción de costos y tiempos.
+    - Escalabilidad mejorada.
+
+    Tono: Ejecutivo, directo y altamente profesional. No te extiendas.
     `;
 
     for (const model of MODELS) {
