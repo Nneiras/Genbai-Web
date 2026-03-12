@@ -59,7 +59,9 @@ themeToggle.addEventListener('click', () => {
 
 // --- Leads Management ---
 let allLeads = [];
+let allAgents = [];
 let selectedLeadIds = new Set();
+let currentEditingAgent = null;
 const leadsBody = document.getElementById('leads-body');
 const searchInput = document.getElementById('lead-search');
 const statusFilter = document.getElementById('status-filter');
@@ -108,6 +110,7 @@ navItems.forEach(item => {
 
 const initialHash = window.location.hash || '#dashboard';
 switchView(initialHash);
+if (initialHash === '#agentes') fetchAgents();
 
 window.addEventListener('hashchange', () => {
     switchView(window.location.hash);
@@ -468,6 +471,131 @@ window.deleteLead = async (id) => {
         alert('Error al eliminar');
     }
 };
+
+// --- AI Agents Management ---
+const agentsListContainer = document.getElementById('agents-list');
+const agentEditor = document.getElementById('agent-editor');
+const stepsContainer = document.getElementById('steps-container');
+
+async function fetchAgents() {
+    try {
+        const { data, error } = await supabase
+            .from('ai_agents')
+            .select('*')
+            .order('name');
+        if (error) throw error;
+        allAgents = data;
+        renderAgents(allAgents);
+    } catch (err) {
+        console.error('Error fetching agents:', err);
+        if (agentsListContainer) agentsListContainer.innerHTML = '<div class="glass kpi-card">Error al cargar agentes.</div>';
+    }
+}
+
+function renderAgents(agents) {
+    if (!agentsListContainer) return;
+    agentsListContainer.innerHTML = agents.map(agent => `
+        <div class="glass kpi-card agent-card" onclick="openAgentEditor('${agent.id}')">
+            <div class="agent-card-header">
+                <div class="agent-icon-box">🤖</div>
+                <span class="status-badge ${agent.is_active ? 'status-new' : 'status-closed'}">
+                    ${agent.is_active ? 'ACTIVO' : 'PAUSADO'}
+                </span>
+            </div>
+            <h3>${agent.name}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">${agent.description || 'Sin descripción'}</p>
+            <div class="agent-card-footer">
+                <span class="steps-count"><i data-lucide="list"></i> ${JSON.parse(JSON.stringify(agent.workflow_steps || [])).length} pasos</span>
+                <span class="edit-link">Configurar <i data-lucide="chevron-right"></i></span>
+            </div>
+        </div>
+    `).join('');
+    if (window.lucide) lucide.createIcons();
+}
+
+window.openAgentEditor = (id) => {
+    const agent = allAgents.find(a => a.id === id);
+    if (!agent) return;
+    currentEditingAgent = { ...agent, workflow_steps: [...(agent.workflow_steps || [])] };
+    
+    document.getElementById('edit-agent-name').innerText = agent.name;
+    document.getElementById('edit-agent-id').innerText = `ID: ${agent.id}`;
+    document.getElementById('edit-agent-prompt').value = agent.system_prompt || '';
+    
+    renderEditorSteps();
+    agentEditor.style.display = 'block';
+    agentEditor.classList.add('active');
+};
+
+function renderEditorSteps() {
+    if (!stepsContainer) return;
+    stepsContainer.innerHTML = currentEditingAgent.workflow_steps.map((stepObj, index) => `
+        <div class="step-item">
+            <div class="step-number">${index + 1}</div>
+            <input type="text" value="${stepObj.step}" onchange="updateStepText(${index}, this.value)" class="step-input">
+            <button class="btn-icon" onclick="removeStep(${index})"><i data-lucide="trash-2"></i></button>
+        </div>
+    `).join('');
+    if (window.lucide) lucide.createIcons();
+}
+
+window.updateStepText = (index, value) => {
+    currentEditingAgent.workflow_steps[index].step = value;
+};
+
+window.removeStep = (index) => {
+    currentEditingAgent.workflow_steps.splice(index, 1);
+    renderEditorSteps();
+};
+
+document.getElementById('add-step')?.addEventListener('click', () => {
+    currentEditingAgent.workflow_steps.push({ step: 'Nuevo paso...', active: true });
+    renderEditorSteps();
+});
+
+document.getElementById('close-agent-editor')?.addEventListener('click', () => {
+    agentEditor.style.display = 'none';
+    agentEditor.classList.remove('active');
+    currentEditingAgent = null;
+});
+
+document.getElementById('save-agent')?.addEventListener('click', async () => {
+    if (!currentEditingAgent) return;
+    
+    const prompt = document.getElementById('edit-agent-prompt').value;
+    
+    try {
+        const { error } = await supabase
+            .from('ai_agents')
+            .update({
+                system_prompt: prompt,
+                workflow_steps: currentEditingAgent.workflow_steps,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', currentEditingAgent.id);
+            
+        if (error) throw error;
+        
+        // Update local state and UI
+        const idx = allAgents.findIndex(a => a.id === currentEditingAgent.id);
+        if (idx !== -1) {
+            allAgents[idx].system_prompt = prompt;
+            allAgents[idx].workflow_steps = currentEditingAgent.workflow_steps;
+        }
+        
+        renderAgents(allAgents);
+        document.getElementById('close-agent-editor').click();
+        alert('Configuración guardada correctamente.');
+    } catch (err) {
+        console.error('Error saving agent:', err);
+        alert('Error al guardar la configuración.');
+    }
+});
+
+// Update view logic to fetch agents
+window.addEventListener('hashchange', () => {
+    if (window.location.hash === '#agentes') fetchAgents();
+});
 
 fetchLeads();
 console.log('GENBAI Admin Initialized');

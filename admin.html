@@ -146,23 +146,43 @@
             <!-- Agentes View -->
             <div id="view-agentes" class="admin-view">
                 <div class="section-header">
-                    <h2>Agentes de IA</h2>
+                    <h2>Configuración de Agentes IA</h2>
+                    <p style="color: var(--text-secondary);">Define el comportamiento y flujos de trabajo de tus IAs.</p>
                 </div>
-                <div class="dashboard-grid">
-                    <div class="glass kpi-card" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
-                        <div style="font-size: 1.5rem;">🤖 Atención Pública</div>
-                        <p style="color: var(--text-secondary);">Chatbot para resolver dudas de clientes en la web.</p>
-                        <span class="status-badge status-new">ACTIVO</span>
+                
+                <div id="agents-list" class="dashboard-grid">
+                    <!-- Dynamic agent cards injected by JS -->
+                    <div class="glass kpi-card loading-state">Cargando agentes...</div>
+                </div>
+
+                <!-- Agent Editor Panel (Hidden by default) -->
+                <div id="agent-editor" class="agent-editor-panel glass" style="display: none;">
+                    <div class="editor-header">
+                        <div class="editor-title-box">
+                            <h3 id="edit-agent-name">Nombre del Agente</h3>
+                            <span id="edit-agent-id" class="agent-id-badge">ID: ---</span>
+                        </div>
+                        <div class="editor-actions">
+                            <button id="save-agent" class="btn-bulk btn-warning">Guardar Cambios</button>
+                            <button id="close-agent-editor" class="btn-icon"><i data-lucide="x"></i></button>
+                        </div>
                     </div>
-                    <div class="glass kpi-card" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
-                        <div style="font-size: 1.5rem;">✍️ Generador de Contenido</div>
-                        <p style="color: var(--text-secondary);">IA para redactar blogs y posts de redes sociales.</p>
-                        <span class="status-badge status-closed">PAUSADO</span>
-                    </div>
-                    <div class="glass kpi-card" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
-                        <div style="font-size: 1.5rem;">📋 Cotizador Automático</div>
-                        <p style="color: var(--text-secondary);">Analiza leads y propone presupuestos personalizados.</p>
-                        <span class="status-badge status-contacted">CONFIGURANDO</span>
+                    
+                    <div class="editor-body">
+                        <div class="editor-section">
+                            <label>Personalidad y Prompt de Sistema</label>
+                            <textarea id="edit-agent-prompt" placeholder="Define cómo actúa el agente..." class="prompt-textarea"></textarea>
+                        </div>
+                        
+                        <div class="editor-section">
+                            <label>Flujo de Trabajo (Pasos)</label>
+                            <div id="steps-container" class="steps-list">
+                                <!-- Steps injected by JS -->
+                            </div>
+                            <button id="add-step" class="btn-icon-text">
+                                <i data-lucide="plus"></i> Agregar Paso
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

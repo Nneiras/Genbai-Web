@@ -21,8 +21,25 @@ CREATE TABLE IF NOT EXISTS conversations (
   channel TEXT, -- chat, email, whatsapp
   transcript JSONB,
   summary TEXT,
-  created_at TIMESTAMPTZ DEFAULT now()
+
+-- AI Agents Configuration
+CREATE TABLE IF NOT EXISTS ai_agents (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  system_prompt TEXT,
+  workflow_steps JSONB DEFAULT '[]',
+  is_active BOOLEAN DEFAULT true,
+  updated_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Initial Agents Seed
+INSERT INTO ai_agents (id, name, description, system_prompt, workflow_steps)
+VALUES 
+('chatbot-admin', 'Atención Pública', 'Chatbot para resolver dudas de clientes en la web.', 'Eres un asistente experto en GENBAI...', '[{"step": "Identificar intención", "active": true}, {"step": "Consultar FAQ", "active": true}]'),
+('lead-strategist', 'Generador de Ideas', 'IA para generar ideas por rubro y cotizaciones.', 'Eres un estratega de negocios...', '[{"step": "Analizar industria", "active": true}, {"step": "Proponer producto", "active": true}]'),
+('followup-specialist', 'Analista de Leads', 'Analiza leads y seguimiento permanente.', 'Eres un analista de CRM...', '[{"step": "Verificar estado", "active": true}, {"step": "Programar follow-up", "active": true}]')
+ON CONFLICT (id) DO NOTHING;
 
 -- Table for budgets/proposals generated
 CREATE TABLE IF NOT EXISTS budgets (
