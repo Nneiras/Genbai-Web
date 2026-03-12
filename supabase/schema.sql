@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS leads (
   industry TEXT,
   message TEXT,
   status TEXT DEFAULT 'new', -- new, contacted, interested, closed
+  quote_status TEXT DEFAULT 'pending', -- pending, in_progress, sent, accepted, no_response
+  product_acquired TEXT DEFAULT 'none', -- ContaIA, QuickPay, FeedbackHub, none
   is_archived BOOLEAN DEFAULT false,
   last_contacted_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT now()

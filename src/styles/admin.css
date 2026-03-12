@@ -287,6 +287,19 @@ body {
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
+/* Quote Status Colors */
+.quote-pending { color: #94a3b8; border-color: rgba(148, 163, 184, 0.3); }
+.quote-in_progress { color: #3b82f6; border-color: rgba(59, 130, 246, 0.3); }
+.quote-sent { color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3); }
+.quote-no_response { color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
+.quote-accepted { color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
+
+/* Product Colors */
+.product-none { color: var(--text-secondary); opacity: 0.5; }
+.product-ContaIA { color: #3b82f6; font-weight: 600; }
+.product-QuickPay { color: #8b5cf6; font-weight: 600; }
+.product-FeedbackHub { color: #10b981; font-weight: 600; }
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }

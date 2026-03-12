@@ -192,6 +192,23 @@ function renderLeads(leads) {
                     </div>
                 </td>
                 <td>
+                    <select class="status-select quote-${lead.quote_status || 'pending'}" onchange="event.stopPropagation(); updateLeadQuoteStatus('${lead.id}', this.value)">
+                        <option value="pending" ${(!lead.quote_status || lead.quote_status === 'pending') ? 'selected' : ''}>PENDIENTE</option>
+                        <option value="in_progress" ${lead.quote_status === 'in_progress' ? 'selected' : ''}>EN PROCESO</option>
+                        <option value="sent" ${lead.quote_status === 'sent' ? 'selected' : ''}>ENVIADA</option>
+                        <option value="no_response" ${lead.quote_status === 'no_response' ? 'selected' : ''}>SIN RESPUESTA</option>
+                        <option value="accepted" ${lead.quote_status === 'accepted' ? 'selected' : ''}>ACEPTADA</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="status-select product-${lead.product_acquired || 'none'}" onchange="event.stopPropagation(); updateLeadProduct('${lead.id}', this.value)">
+                        <option value="none" ${(!lead.product_acquired || lead.product_acquired === 'none') ? 'selected' : ''}>NINGUNO</option>
+                        <option value="ContaIA" ${lead.product_acquired === 'ContaIA' ? 'selected' : ''}>ContaIA</option>
+                        <option value="QuickPay" ${lead.product_acquired === 'QuickPay' ? 'selected' : ''}>QuickPay</option>
+                        <option value="FeedbackHub" ${lead.product_acquired === 'FeedbackHub' ? 'selected' : ''}>FeedbackHub</option>
+                    </select>
+                </td>
+                <td>
                     <select class="status-select status-${lead.status}" onchange="event.stopPropagation(); updateLeadStatus('${lead.id}', this.value)">
                         <option value="new" ${lead.status === 'new' ? 'selected' : ''}>NUEVO</option>
                         <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>CONTACTADO</option>
@@ -390,9 +407,37 @@ window.updateLeadStatus = async (id, newStatus) => {
             .update({ status: newStatus })
             .eq('id', id);
         if (error) throw error;
+        // No fetchLeads here to avoid re-rendering entire list unless needed, 
+        // but status classes need update. For now fetchLeads is safer.
         fetchLeads();
     } catch (err) {
-        alert('Error al cargar leads');
+        alert('Error al actualizar estado');
+    }
+};
+
+window.updateLeadQuoteStatus = async (id, newQuoteStatus) => {
+    try {
+        const { error } = await supabase
+            .from('leads')
+            .update({ quote_status: newQuoteStatus })
+            .eq('id', id);
+        if (error) throw error;
+        fetchLeads();
+    } catch (err) {
+        alert('Error al actualizar cotización');
+    }
+};
+
+window.updateLeadProduct = async (id, newProduct) => {
+    try {
+        const { error } = await supabase
+            .from('leads')
+            .update({ product_acquired: newProduct })
+            .eq('id', id);
+        if (error) throw error;
+        fetchLeads();
+    } catch (err) {
+        alert('Error al actualizar producto');
     }
 };
 
