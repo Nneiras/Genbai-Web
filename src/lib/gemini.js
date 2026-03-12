@@ -5,8 +5,30 @@
 const API_KEY = import.meta.env.GOOGLE_API_GEMINI;
 const BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
-// Try different models if one fails
-const MODELS = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-2.0-flash-exp", "gemini-1.5-pro"];
+// Try different models if one fails. Added 2.0 and 2.5 based on user console.
+const MODELS = [
+    "gemini-2.0-flash", 
+    "gemini-2.0-flash-001",
+    "gemini-1.5-flash", 
+    "gemini-1.5-flash-latest", 
+    "gemini-1.5-pro",
+    "gemini-2.0-flash-exp"
+];
+
+/**
+ * Diagnostic tool to see exactly what models your API Key can use
+ */
+export async function listAvailableModels() {
+    try {
+        const response = await fetch(`${BASE_URL}?key=${API_KEY}`);
+        const data = await response.json();
+        console.log("--- LISTA DE MODELOS DISPONIBLES ---");
+        console.log(data.models?.map(m => m.name.split('/').pop()));
+        return data.models;
+    } catch (e) {
+        console.error("No se pudo listar los modelos:", e);
+    }
+}
 
 const SYSTEM_PROMPT = `
 Eres GenAI, el asistente experto en inteligencia artificial de GENBAI (genbai.com).
@@ -113,5 +135,10 @@ export async function generateAuditPlan(rubro, proceso, nombre) {
         }
     }
 
-    return "Lo sentimos, no pudimos conectar con los servicios de IA de Google en este momento. Por favor, intenta de nuevo más tarde o contacta a un asesor.";
+    return "Lo sentimos, no pudimos conectar con los servicios de IA. Por favor, intenta más tarde. RECOMIENDO: Revisa la consola para ver qué modelos tienes activos.";
+}
+
+// Auto-run discovery on load for debugging
+if (import.meta.env.DEV || window.location.hostname.includes('vercel')) {
+    listAvailableModels();
 }
