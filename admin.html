@@ -38,10 +38,6 @@
                     <i data-lucide="users"></i>
                     <span>Leads</span>
                 </a>
-                <a href="#agentes" class="nav-item">
-                    <i data-lucide="bot"></i>
-                    <span>Agentes IA</span>
-                </a>
                 <a href="#config" class="nav-item">
                     <i data-lucide="settings"></i>
                     <span>Configuración</span>
@@ -143,53 +139,19 @@
                 </section>
             </div>
 
-            <!-- Agentes View -->
-            <div id="view-agentes" class="admin-view">
+            <!-- Config View -->
+            <div id="view-config" class="admin-view">
                 <div class="section-header">
                     <h2>Configuración de Agentes IA</h2>
-                    <p style="color: var(--text-secondary);">Define el comportamiento y flujos de trabajo de tus IAs.</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Define el comportamiento y flujos de trabajo de tus IAs.</p>
                 </div>
-                
-                <div id="agents-list" class="dashboard-grid">
+
+                <div id="agents-list" class="dashboard-grid" style="margin-bottom: 3rem;">
                     <!-- Dynamic agent cards injected by JS -->
                     <div class="glass kpi-card loading-state">Cargando agentes...</div>
                 </div>
 
-                <!-- Agent Editor Panel (Hidden by default) -->
-                <div id="agent-editor" class="agent-editor-panel glass" style="display: none;">
-                    <div class="editor-header">
-                        <div class="editor-title-box">
-                            <h3 id="edit-agent-name">Nombre del Agente</h3>
-                            <span id="edit-agent-id" class="agent-id-badge">ID: ---</span>
-                        </div>
-                        <div class="editor-actions">
-                            <button id="save-agent" class="btn-bulk btn-warning">Guardar Cambios</button>
-                            <button id="close-agent-editor" class="btn-icon"><i data-lucide="x"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="editor-body">
-                        <div class="editor-section">
-                            <label>Personalidad y Prompt de Sistema</label>
-                            <textarea id="edit-agent-prompt" placeholder="Define cómo actúa el agente..." class="prompt-textarea"></textarea>
-                        </div>
-                        
-                        <div class="editor-section">
-                            <label>Flujo de Trabajo (Pasos)</label>
-                            <div id="steps-container" class="steps-list">
-                                <!-- Steps injected by JS -->
-                            </div>
-                            <button id="add-step" class="btn-icon-text">
-                                <i data-lucide="plus"></i> Agregar Paso
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Config View -->
-            <div id="view-config" class="admin-view">
-                <div class="section-header">
+                <div class="section-header" style="margin-top: 4rem; border-top: 1px solid var(--border); padding-top: 2rem;">
                     <h2>Configuración de la Cuenta</h2>
                 </div>
                 <div class="glass" style="padding: 2rem; max-width: 600px;">

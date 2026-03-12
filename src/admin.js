@@ -92,7 +92,6 @@ function switchView(targetId) {
         const titles = {
             '#dashboard': 'Panel de Control',
             '#leads': 'Gestión de Leads',
-            '#agentes': 'Agentes IA',
             '#config': 'Configuración'
         };
         pageTitle.innerText = titles[targetId] || 'GENBAI Admin';
@@ -110,9 +109,12 @@ navItems.forEach(item => {
 
 const initialHash = window.location.hash || '#dashboard';
 switchView(initialHash);
-if (initialHash === '#agentes') fetchAgents();
+if (initialHash === '#config') fetchAgents();
 
 window.addEventListener('hashchange', () => {
+    switchView(window.location.hash);
+    if (window.location.hash === '#config') fetchAgents();
+});
     switchView(window.location.hash);
 });
 
@@ -592,10 +594,7 @@ document.getElementById('save-agent')?.addEventListener('click', async () => {
     }
 });
 
-// Update view logic to fetch agents
-window.addEventListener('hashchange', () => {
-    if (window.location.hash === '#agentes') fetchAgents();
-});
+// Update view logic to fetch agents removed as it is now in the nav section
 
 fetchLeads();
 console.log('GENBAI Admin Initialized');
