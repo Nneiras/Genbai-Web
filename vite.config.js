@@ -3,7 +3,7 @@ import { resolve } from 'path'
 
 export default defineConfig({
   // Allow environment variables with these prefixes to be exposed to the client
-  envPrefix: ['VITE_', 'URL_', 'API_KEY_', 'GOOGLE_'],
+  envPrefix: ['VITE_', 'URL_', 'API_KEY_', 'GOOGLE_', 'SUPABASE_'],
   build: {
     rollupOptions: {
       input: {
