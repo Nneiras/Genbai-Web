@@ -40,5 +40,5 @@ ALTER TABLE budgets ENABLE ROW LEVEL SECURITY;
 -- Create policies (Allow anyone to insert leads from the landing page)
 CREATE POLICY "Enable insert for everyone" ON leads FOR INSERT TO public WITH CHECK (true);
 
--- Policy to allow authenticated users (staff) to see all leads
-CREATE POLICY "Allow authenticated users to read leads" ON leads FOR SELECT TO authenticated USING (true);
+-- Policy to allow anyone to read leads (Admin panel uses PIN gate but is technically anon)
+CREATE POLICY "Allow anyone to read leads" ON leads FOR SELECT TO public USING (true);
