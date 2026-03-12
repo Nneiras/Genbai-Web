@@ -3,8 +3,10 @@
  */
 
 const API_KEY = import.meta.env.GOOGLE_API_GEMINI;
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-// Note: Using v1beta as some features/models are more stable there for free tier
+const BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
+
+// Try different models if one fails
+const MODELS = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-2.0-flash-exp", "gemini-1.5-pro"];
 
 const SYSTEM_PROMPT = `
 Eres GenAI, el asistente experto en inteligencia artificial de GENBAI (genbai.com).
@@ -38,7 +40,8 @@ export async function sendMessageToGemini(history) {
     }
 
     try {
-        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+        const model = MODELS[0]; // Use first model for chat
+        const response = await fetch(`${BASE_URL}/${model}:generateContent?key=${API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -82,34 +85,33 @@ export async function generateAuditPlan(rubro, proceso, nombre) {
     Usa un tono premium, convincente y profesional.
     `;
 
-    try {
-        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ role: 'user', parts: [{ text: AUDIT_PROMPT }] }],
-                generationConfig: { temperature: 0.8 }
-            })
-        });
-        const data = await response.json();
-        console.log("DEBUG - Gemini Data:", data);
-        
-        if (data.error) {
-            console.error("DEBUG - Gemini Error Details:", data.error);
-            if (data.error.code === 429) {
-                return "Estamos recibiendo muchas solicitudes. Por favor, intenta de nuevo en unos minutos.";
+    for (const model of MODELS) {
+        try {
+            console.log(`Intentando generar auditoría con modelo: ${model}...`);
+            const response = await fetch(`${BASE_URL}/${model}:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ role: 'user', parts: [{ text: AUDIT_PROMPT }] }],
+                    generationConfig: { temperature: 0.8 }
+                })
+            });
+
+            const data = await response.json();
+            console.log(`DEBUG - Respuesta de ${model}:`, data);
+
+            if (data.error) {
+                console.warn(`Error con modelo ${model}:`, data.error.message);
+                continue; // Prueba el siguiente modelo
             }
-            throw new Error(`Google API Error: ${data.error.message} (Code: ${data.error.code})`);
-        }
 
-        if (!data.candidates || !data.candidates[0]) {
-            console.error("DEBUG - No candidates in response:", data);
-            throw new Error("No se pudo generar una respuesta clara.");
+            if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                return data.candidates[0].content.parts[0].text;
+            }
+        } catch (error) {
+            console.error(`Fallo crítico con modelo ${model}:`, error);
         }
-
-        return data.candidates[0].content.parts[0].text;
-    } catch (error) {
-        console.error("Audit Generation Error:", error);
-        return "No pudimos generar el informe detallado en este momento. Por favor contacta a un asesor.";
     }
+
+    return "Lo sentimos, no pudimos conectar con los servicios de IA de Google en este momento. Por favor, intenta de nuevo más tarde o contacta a un asesor.";
 }
