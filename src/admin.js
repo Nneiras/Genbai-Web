@@ -478,22 +478,39 @@ const agentEditor = document.getElementById('agent-editor');
 const stepsContainer = document.getElementById('steps-container');
 
 async function fetchAgents() {
+    console.log('Fetching agents...');
     try {
         const { data, error } = await supabase
             .from('ai_agents')
             .select('*')
             .order('name');
-        if (error) throw error;
-        allAgents = data;
+        
+        if (error) {
+            console.error('Supabase error fetching agents:', error);
+            throw error;
+        }
+        
+        console.log('Agents fetched:', data);
+        allAgents = data || [];
         renderAgents(allAgents);
     } catch (err) {
-        console.error('Error fetching agents:', err);
-        if (agentsListContainer) agentsListContainer.innerHTML = '<div class="glass kpi-card">Error al cargar agentes.</div>';
+        console.error('Catch error fetching agents:', err);
+        if (agentsListContainer) agentsListContainer.innerHTML = `<div class="glass kpi-card">Error al cargar agentes: ${err.message}</div>`;
     }
 }
 
 function renderAgents(agents) {
-    if (!agentsListContainer) return;
+    console.log('Rendering agents...', agents);
+    if (!agentsListContainer) {
+        console.error('agentsListContainer is missing in the DOM');
+        return;
+    }
+
+    if (!agents || agents.length === 0) {
+        agentsListContainer.innerHTML = '<div class="glass kpi-card">No se encontraron agentes. Asegúrate de ejecutar el script SQL.</div>';
+        return;
+    }
+
     agentsListContainer.innerHTML = agents.map(agent => `
         <div class="glass kpi-card agent-card" onclick="openAgentEditor('${agent.id}')">
             <div class="agent-card-header">
