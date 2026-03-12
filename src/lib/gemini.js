@@ -3,7 +3,8 @@
  */
 
 const API_KEY = import.meta.env.GOOGLE_API_GEMINI;
-const API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
+const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+// Note: Using v1beta as some features/models are more stable there for free tier
 
 const SYSTEM_PROMPT = `
 Eres GenAI, el asistente experto en inteligencia artificial de GENBAI (genbai.com).
@@ -91,15 +92,18 @@ export async function generateAuditPlan(rubro, proceso, nombre) {
             })
         });
         const data = await response.json();
+        console.log("DEBUG - Gemini Data:", data);
         
         if (data.error) {
+            console.error("DEBUG - Gemini Error Details:", data.error);
             if (data.error.code === 429) {
-                return "Estamos recibiendo muchas solicitudes. Por favor, intenta de nuevo en unos minutos o contacta a un asesor directamente.";
+                return "Estamos recibiendo muchas solicitudes. Por favor, intenta de nuevo en unos minutos.";
             }
-            throw new Error(data.error.message);
+            throw new Error(`Google API Error: ${data.error.message} (Code: ${data.error.code})`);
         }
 
         if (!data.candidates || !data.candidates[0]) {
+            console.error("DEBUG - No candidates in response:", data);
             throw new Error("No se pudo generar una respuesta clara.");
         }
 
