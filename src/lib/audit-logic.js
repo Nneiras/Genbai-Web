@@ -20,6 +20,7 @@ export function initAudit() {
     const closeReport = document.getElementById('close-report');
 
     let selection = { rubro: '', proceso: '' };
+    let currentLeadId = null;
 
     function checkSelection() {
         if (rubroSelect.value && procesoSelect.value) {
@@ -51,7 +52,8 @@ export function initAudit() {
             const plan = await generateAuditPlan(selection.rubro, selection.proceso, nombre);
 
             // 2. Save Lead to Supabase with the report
-            await saveAuditLead(nombre, email, selection.rubro, selection.proceso, plan);
+            const leadId = await saveAuditLead(nombre, email, selection.rubro, selection.proceso, plan);
+            currentLeadId = leadId;
 
             // Show Report
             showReport(plan, nombre);
@@ -59,7 +61,8 @@ export function initAudit() {
             console.error("Critical Audit Error:", error);
             // Fallback for user experience
             const fallbackPlan = "No pudimos generar el informe detallado, pero hemos guardado tus datos y un consultor te contactará pronto.";
-            await saveAuditLead(nombre, email, selection.rubro, selection.proceso, `ERROR EN GENERACIÓN: ${error.message}`);
+            const leadId = await saveAuditLead(nombre, email, selection.rubro, selection.proceso, `ERROR EN GENERACIÓN: ${error.message}`);
+            currentLeadId = leadId;
             showReport(fallbackPlan, nombre);
         }
     });
@@ -76,15 +79,14 @@ export function initAudit() {
                 industry: rubro,
                 message: fullMessage,
                 status: 'new'
-            }]);
+            }]).select('id').single();
             
             if (error) throw error;
-            console.log("Lead guardado exitosamente");
-            return data;
+            console.log("Lead guardado exitosamente con ID:", data.id);
+            return data.id;
         } catch (err) {
             console.error("Error saving audit lead to Supabase:", err);
-            // We don't throw here to avoid blocking the UI if only the save fails, 
-            // but we log it clearly.
+            return null;
         }
     }
 
@@ -158,15 +160,30 @@ export function initAudit() {
              btn.innerText = "Procesando...";
              btn.disabled = true;
 
-             // Update lead instead of creating a new one (simulated by finding by email if we don't have ID)
-             // For simplicity, we create a specialized follow-up lead
-             await supabase.from('leads').insert([{
-                 name: nombre,
-                 email: document.getElementById('audit-email').value,
-                 industry: selection.rubro,
-                 message: `SOLICITUD COTIZACIÓN SOBRE AUDITORÍA PREVIA (${selection.proceso}). El cliente quiere avanzar con la implementación.`,
-                 status: 'interested'
-             }]);
+             try {
+                if (currentLeadId) {
+                    // Update existing lead instead of creating a new one
+                    await supabase.from('leads').update({
+                        status: 'interested',
+                        message: `SOLICITUD COTIZACIÓN SOBRE AUDITORÍA PREVIA (${selection.proceso}). El cliente quiere avanzar con la implementación.`
+                    }).eq('id', currentLeadId);
+                } else {
+                    // Fallback to insert if ID is missing (should not happen normally)
+                    await supabase.from('leads').insert([{
+                        name: nombre,
+                        email: document.getElementById('audit-email').value,
+                        industry: selection.rubro,
+                        message: `SOLICITUD COTIZACIÓN SOBRE AUDITORÍA PREVIA (SIN ID).`,
+                        status: 'interested'
+                    }]);
+                }
+             } catch (err) {
+                 console.error("Error updating/creating interested lead:", err);
+             }
+
+             document.getElementById('quote-actions').style.display = 'none';
+             document.getElementById('quote-success-msg').style.display = 'block';
+        });
 
              document.getElementById('quote-actions').style.display = 'none';
              document.getElementById('quote-success-msg').style.display = 'block';

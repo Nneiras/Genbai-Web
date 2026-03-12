@@ -138,6 +138,24 @@ async function fetchLeads() {
     }
 }
 
+// --- Sidebar Toggle ---
+const sidebar = document.querySelector('.sidebar');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+
+if (sidebar && sidebarToggle) {
+    // Restore state
+    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+        sidebar.classList.add('collapsed');
+    }
+
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        // Refresh icons if needed
+        if (window.lucide) lucide.createIcons();
+    });
+}
+
 /**
  * Render leads table
  */
@@ -148,9 +166,11 @@ function renderLeads(leads) {
     }
 
     leadsBody.innerHTML = leads.map(lead => {
-        const date = new Date(lead.created_at).toLocaleDateString();
+        const createdAt = new Date(lead.created_at);
+        const dateStr = createdAt.toLocaleDateString();
+        const timeStr = createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
         const isSelected = selectedLeadIds.has(lead.id);
-        const isAudit = lead.message?.includes('AUDITORÍA IA');
 
         return `
             <tr class="lead-row-main" id="lead-${lead.id}" onclick="toggleExpand('${lead.id}', event)">
@@ -163,7 +183,7 @@ function renderLeads(leads) {
                 </td>
                 <td>
                     <div style="font-size: 0.9rem; font-weight: 500;">${lead.industry || '---'}</div>
-                    <div style="font-size: 0.75rem; color: var(--accent);">${lead.created_at ? date : ''}</div>
+                    <div style="font-size: 0.75rem; color: var(--accent);">${dateStr} <span style="opacity: 0.6; margin-left: 4px;">${timeStr}</span></div>
                 </td>
                 <td>
                     <div class="expand-trigger">
@@ -181,6 +201,9 @@ function renderLeads(leads) {
                 </td>
                 <td onclick="event.stopPropagation()">
                     <div class="action-btns">
+                        <a href="mailto:${lead.email}" class="btn-icon" title="Enviar Email">
+                            <i data-lucide="mail"></i>
+                        </a>
                         <a href="https://wa.me/${lead.phone?.replace(/\D/g, '') || ''}" target="_blank" class="btn-icon" title="WhatsApp">
                             <i data-lucide="message-circle"></i>
                         </a>

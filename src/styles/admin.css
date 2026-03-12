@@ -19,6 +19,8 @@
     --glass-bg: rgba(25, 25, 30, 0.6);
     --glass-border: rgba(255, 255, 255, 0.1);
     --gate-bg: radial-gradient(circle at center, #1a1a20 0%, #0a0a0c 100%);
+    
+    --sidebar-transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="light"] {
@@ -55,16 +57,49 @@ body {
 }
 
 /* Sidebar */
-.sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--bg-sidebar);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 2rem 1.5rem;
+    padding: 2rem 1rem;
     position: fixed;
+    left: 0;
+    top: 0;
     height: 100vh;
+    transition: var(--sidebar-transition);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+    padding: 2rem 0.75rem;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+}
+
+.sidebar.collapsed .logo {
+    display: none;
+}
+
+.sidebar-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
     transition: var(--transition);
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--border);
+    color: var(--accent);
+}
+
+.sidebar.collapsed .sidebar-toggle-btn {
+    transform: rotate(180deg);
 }
 
 .logo {
@@ -72,7 +107,6 @@ body {
     font-weight: 800;
     letter-spacing: -0.05em;
     color: var(--accent);
-    margin-bottom: 3rem;
 }
 
 .sidebar-nav {
@@ -103,6 +137,15 @@ body {
     box-shadow: 0 4px 15px var(--accent-glow);
 }
 
+.sidebar.collapsed .nav-item span:not(.icon) {
+    display: none;
+}
+
+.sidebar.collapsed .nav-item {
+    justify-content: center;
+    padding: 0.9rem;
+}
+
 /* Sidebar Footer & Theme Toggle */
 .sidebar-footer {
     padding-top: 2rem;
@@ -131,10 +174,15 @@ body {
     background: var(--border);
 }
 
-[data-theme="dark"] .sun-icon { display: block; }
-[data-theme="dark"] .moon-icon { display: none; }
-[data-theme="light"] .sun-icon { display: none; }
 [data-theme="light"] .moon-icon { display: block; }
+
+.sidebar.collapsed .theme-btn {
+    padding: 0.75rem 0;
+}
+
+.sidebar.collapsed .btn-text {
+    display: none;
+}
 
 /* Main Content */
 .main-content {

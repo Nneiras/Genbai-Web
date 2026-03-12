@@ -25,6 +25,9 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <span class="logo">GENBAI</span>
+                <button id="sidebar-toggle" class="sidebar-toggle-btn">
+                    <i data-lucide="chevron-left"></i>
+                </button>
             </div>
             <nav class="sidebar-nav">
                 <a href="#dashboard" class="nav-item active">
@@ -163,11 +166,24 @@
                 </div>
                 <div class="glass" style="padding: 2rem; max-width: 600px;">
                     <div style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">Conexión Supabase</h3>
+                        <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="database"></i> Conexión Supabase
+                        </h3>
                         <p style="color: var(--text-secondary); font-size: 0.9rem;">Las credenciales se gestionan vía variables de entorno en Vercel.</p>
                     </div>
-                    <div style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">Perfil del Administrador</h3>
+                    <div style="margin-bottom: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                        <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="mail"></i> Sincronización Google Mail
+                        </h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Sincroniza tu cuenta para enviar propuestas directamente desde el panel.</p>
+                        <button class="btn-bulk btn-warning" style="width: auto;">
+                            <i data-lucide="refresh-cw"></i> Conectar con Google
+                        </button>
+                    </div>
+                    <div style="margin-bottom: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                        <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="user"></i> Perfil del Administrador
+                        </h3>
                         <p><strong>Usuario:</strong> Admin GENBAI</p>
                         <p><strong>Email:</strong> nneiras@genbai.com</p>
                     </div>
