@@ -187,6 +187,9 @@ function renderLeads(leads) {
                         <button class="btn-icon btn-archive" onclick="archiveLead('${lead.id}')" title="Archivar">
                             <i data-lucide="archive"></i>
                         </button>
+                        <button class="btn-icon btn-delete" onclick="deleteLead('${lead.id}')" title="Eliminar">
+                            <i data-lucide="trash-2"></i>
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -381,6 +384,20 @@ window.archiveLead = async (id) => {
         fetchLeads();
     } catch (err) {
         alert('Error al archivar');
+    }
+};
+
+window.deleteLead = async (id) => {
+    if (!confirm('¿ELIMINAR PERMANENTEMENTE este lead?')) return;
+    try {
+        const { error } = await supabase
+            .from('leads')
+            .delete()
+            .eq('id', id);
+        if (error) throw error;
+        fetchLeads();
+    } catch (err) {
+        alert('Error al eliminar');
     }
 };
 

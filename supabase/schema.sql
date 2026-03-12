@@ -42,3 +42,9 @@ CREATE POLICY "Enable insert for everyone" ON leads FOR INSERT TO public WITH CH
 
 -- Policy to allow anyone to read leads (Admin panel uses PIN gate but is technically anon)
 CREATE POLICY "Allow anyone to read leads" ON leads FOR SELECT TO public USING (true);
+
+-- Policy to allow anyone to update leads (Status and Archiving)
+CREATE POLICY "Allow anyone to update leads" ON leads FOR UPDATE TO public USING (true);
+
+-- Policy to allow anyone to delete leads
+CREATE POLICY "Allow anyone to delete leads" ON leads FOR DELETE TO public USING (true);
