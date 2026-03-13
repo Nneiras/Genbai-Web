@@ -8,8 +8,8 @@
 
 .audit-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1fr 1.1fr; /* Give slightly more room to the terminal */
+    gap: 80px; /* Increase gap for better breathing room */
     align-items: center;
 }
 
@@ -20,9 +20,10 @@
 }
 
 .audit-content p {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     color: var(--text-secondary);
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    line-height: 1.7;
 }
 
 /* Step Card Styles */
@@ -316,10 +317,10 @@
     -webkit-appearance: none;
     width: 20px;
     height: 20px;
-    background: var(--accent);
+    background: var(--primary);
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.4);
     transition: transform 0.2s;
 }
 
@@ -364,11 +365,11 @@
 .roi-value {
     font-size: 1.8rem;
     font-weight: 800;
-    color: #4ade80; /* Green for money */
+    color: #10b981; /* Professional Emerald Green */
 }
 
 .roi-value.accent {
-    color: var(--accent); /* Blue for time */
+    color: var(--primary); /* Cyan for time */
 }
 
 /* Social Proof Badge */
@@ -463,8 +464,8 @@
     line-height: 1.5;
     margin-bottom: 1rem;
     padding: 15px;
-    background: rgba(255,255,255,0.03);
-    border-left: 3px solid var(--accent);
+    background: rgba(255,255,255,0.02);
+    border-left: 3px solid var(--primary);
     border-radius: 0 8px 8px 0;
 }
 
@@ -485,12 +486,13 @@
 }
 
 .term-btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent-purple)) !important;
+    background: var(--gradient-primary) !important;
     border: none !important;
-    box-shadow: 0 4px 15px rgba(59,130,246,0.3) !important;
+    box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2) !important;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 0.9rem;
+    border-radius: 8px !important;
 }
 
 .term-console {
