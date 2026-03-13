@@ -1,5 +1,5 @@
 import { supabase } from './lib/supabase.js';
-import { fetchAgentLogs } from './lib/agent-logs.js';
+import { fetchAgentLogs, logAgentAction } from './lib/agent-logs.js';
 
 // --- Auth Gate (PIN: 3687) ---
 const gateOverlay = document.getElementById('admin-gate');
@@ -655,3 +655,64 @@ document.getElementById('save-agent')?.addEventListener('click', async () => {
 
 fetchLeads();
 console.log('GENBAI Admin Initialized');
+/**
+ * Simulates Agent Execution on a Lead
+ */
+window.runAgentOnLead = async (agentId, leadId) => {
+    try {
+        // 1. Fetch Agent Config
+        const { data: agent, error: agentError } = await supabase
+            .from('ai_agents')
+            .select('*')
+            .eq('id', agentId)
+            .single();
+        
+        if (agentError || !agent) throw new Error('Agente no encontrado');
+
+        // 2. Start Logs
+        await logAgentAction(agentId, 'Iniciando procesamiento', `Ejecutando flujo para el lead: ${leadId}`, 'info', leadId);
+
+        // 3. Simulate Workflow Steps
+        const steps = agent.workflow_steps || [];
+        for (const step of steps) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for realism
+            await logAgentAction(agentId, `Paso completado: ${step.step}`, 'Procesando datos del lead...', 'success', leadId);
+        }
+
+        // 4. Generate Result Draft
+        let resultData = {};
+        let outputType = '';
+
+        if (agentId === 'chatbot-admin') {
+            outputType = 'chat_response';
+            resultData = { body: "Hola, gracias por interesarte en GENBAI. He analizado tu consulta y te sugiero...", subject: "Respuesta de GENBAI" };
+        } else if (agentId === 'lead-strategist') {
+            outputType = 'roi_pitch';
+            resultData = { body: "Propuesta de valor: Automatizando tus cobros con QuickPay podrías ahorrar 15hs semanales.", subject: "Tu Estrategia GENBAI" };
+        } else {
+            outputType = 'followup_draft';
+            resultData = { body: "¿Pudiste revisar la info? Sigo aquí para ayudarte con la implementación.", subject: "Seguimiento GENBAI" };
+        }
+
+        const { error: resultError } = await supabase
+            .from('agent_results')
+            .insert([{
+                lead_id: leadId,
+                agent_id: agentId,
+                output_type: outputType,
+                content: resultData,
+                status: 'draft'
+            }]);
+
+        if (resultError) throw resultError;
+
+        await logAgentAction(agentId, 'Proceso Finalizado', 'Resultado guardado como Borrador para revisión.', 'success', leadId);
+        
+        alert(`¡Agente ${agent.name} finalizó! Revisa los resultados en el lead.`);
+        fetchLeads(); // Refresh to show the badge if we add one
+    } catch (err) {
+        console.error('Error in agent execution:', err);
+        await logAgentAction(agentId, 'Error en ejecución', err.message, 'error', leadId);
+        alert('Error al ejecutar el agente');
+    }
+};
