@@ -74,26 +74,52 @@
     <div class="container">
       <div class="audit-grid">
         <div class="audit-content">
-          <span class="hero-tagline">Diagnóstico Gratuito</span>
+          <span class="hero-tagline">Diagnóstico Gratuito & ROI</span>
           <h2>Transforma tu negocio con <span>IA</span></h2>
-          <p>Descubre qué procesos de tu empresa pueden ser automatizados y recibe un plan estratégico personalizado en segundos.</p>
-          <div class="audit-features">
-            <div class="feat"><span class="icon">📊</span> Análisis de Rubro</div>
-            <div class="feat"><span class="icon">⚡</span> Optimización de Procesos</div>
-            <div class="feat"><span class="icon">📄</span> Informe Estratégico PDF</div>
+          <p>Descubre cuánto tiempo y dinero estás perdiendo en tareas manuales. Calcula tu retorno de inversión instantáneo.</p>
+          
+          <div class="roi-calculator glass">
+            <h3>Calculadora de Ahorro ROI</h3>
+            <label for="roi-hours" style="color: var(--text-secondary); font-size: 0.9rem;">Horas manuales por semana (aprox)</label>
+            <input type="range" id="roi-hours" min="10" max="200" step="10" value="40" class="roi-slider">
+            <div class="roi-slider-labels">
+              <span>10h</span>
+              <span id="roi-hours-val" style="color: var(--accent); font-weight: bold; font-size: 1.2rem;">40h</span>
+              <span>200h+</span>
+            </div>
+            
+            <div class="roi-results">
+              <div class="roi-result-box">
+                <span class="roi-label">Ahorro Mensual Estimado</span>
+                <span class="roi-value" id="roi-money">USD $1,200</span>
+              </div>
+              <div class="roi-result-box">
+                <span class="roi-label">Tiempo Recuperado</span>
+                <span class="roi-value accent" id="roi-time">120 hrs</span>
+              </div>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-dim); text-align: center; margin-top: 1.5rem; opacity: 0.7;">*Cálculos basados en un ahorro del 75% al delegar flujos repetitivos a IA.</p>
+          </div>
+          
+          <div class="social-proof-badge">
+            <span class="pulse-dot"></span> Únete a las +50 Pymes optimizadas este mes.
           </div>
         </div>
 
-        <div class="audit-card glass">
-          <div id="audit-steps" class="audit-steps">
+        <div class="audit-card glass conversational-ui">
+          <div class="terminal-header">
+            <div class="terminal-dots"><span></span><span></span><span></span></div>
+            <span class="terminal-title">GENBAI AI_CORE v2.0</span>
+          </div>
+          
+          <div id="audit-steps" class="audit-steps term-body">
             <!-- Step 1: Industry & Process Selection -->
-            <div id="step-1" class="step active">
-              <h4 style="margin-bottom: 20px;">1. Define tu perfil</h4>
+            <div id="step-1" class="step active term-step">
+              <div class="term-bot-msg">🤖 Inicializando auditoría. ¿A qué rubro pertenece tu empresa?</div>
               
-              <div class="form-group" style="margin-bottom: 20px;">
-                <label for="rubro-select" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; display: block;">¿En qué rubro operas?</label>
-                <select id="rubro-select" class="audit-select">
-                  <option value="" disabled selected>Selecciona una opción...</option>
+              <div class="form-group term-input-group mt-2">
+                <select id="rubro-select" class="audit-select term-select">
+                  <option value="" disabled selected>Selecciona una industria...</option>
                   <option value="Servicios Profesionales">Servicios Profesionales</option>
                   <option value="Estudio Contable / Legal">Estudio Contable / Legal</option>
                   <option value="Salud y Medicina">Salud y Medicina</option>
@@ -105,10 +131,11 @@
                 </select>
               </div>
 
-              <div class="form-group" style="margin-bottom: 30px;">
-                <label for="proceso-select" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; display: block;">¿Qué proceso quieres optimizar?</label>
-                <select id="proceso-select" class="audit-select">
-                  <option value="" disabled selected>Selecciona una opción...</option>
+              <div class="term-bot-msg mt-3" id="process-question" style="display: none;">🤖 Entendido. ¿Qué proceso principal buscas automatizar?</div>
+              
+              <div class="form-group term-input-group mt-2" id="process-wrapper" style="display: none;">
+                <select id="proceso-select" class="audit-select term-select">
+                  <option value="" disabled selected>Selecciona un proceso...</option>
                   <option value="Atención al Cliente">Atención al Cliente (Chatbots)</option>
                   <option value="Ventas y Seguimiento">Ventas y Seguimiento</option>
                   <option value="Generación de Contenido">Generación de Contenido</option>
@@ -117,26 +144,26 @@
                 </select>
               </div>
 
-              <button id="next-to-form" class="btn-primary" style="display: none; width: 100%;">Continuar</button>
+              <button id="next-to-form" class="btn-primary term-btn mt-4" style="display: none; width: 100%;">⚡ Iniciar Escaneo de IA</button>
             </div>
 
             <!-- Step 2: Form -->
-            <div id="step-2" class="step">
-              <h3>Datos de contacto</h3>
-              <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Te enviaremos el plan detallado a tu email.</p>
-              <form id="audit-form" class="audit-form">
-                <input type="text" id="audit-name" placeholder="Tu Nombre" class="audit-input" required>
-                <input type="email" id="audit-email" placeholder="Tu Email" class="audit-input" required>
-                <button type="submit" class="btn-primary">Generar Plan Estratégico</button>
+            <div id="step-2" class="step term-step">
+              <div class="term-bot-msg">🤖 Excelente. Procesando modelos para <span id="dyn-industry" style="color: var(--accent);">tu rubro</span>... Para enviarte el plan detallado, ¿cuál es tu nombre y email corporativo?</div>
+              <form id="audit-form" class="audit-form term-input-group mt-3">
+                <input type="text" id="audit-name" placeholder="Tu Nombre / Empresa" class="audit-input term-input" required>
+                <input type="email" id="audit-email" placeholder="Email corporativo" class="audit-input term-input" required>
+                <button type="submit" class="btn-primary term-btn mt-3">Desplegar Reporte 🚀</button>
               </form>
             </div>
 
             <!-- Step 3: Loading -->
-            <div id="step-3" class="step">
-              <div style="text-align: center; padding: 2rem;">
-                <div class="loading-spinner"></div>
-                <h3>Analizando tu rubro...</h3>
-                <p>Nuestra IA está diseñando tu plan a medida.</p>
+            <div id="step-3" class="step term-step">
+              <div class="term-console">
+                <div class="term-line">> Conectando con GENBAI Mainframe... <span style="color: #4ade80;">[OK]</span></div>
+                <div class="term-line">> Analizando cuellos de botella... <span class="blink" style="color: #facc15;">[Cargando]</span></div>
+                <div class="term-line">> Generando proyección de ROI...</div>
+                <div class="loading-spinner" style="margin: 2rem auto;"></div>
               </div>
             </div>
           </div>

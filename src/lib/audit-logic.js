@@ -19,8 +19,35 @@ export function initAudit() {
     const reportContent = document.getElementById('report-content');
     const closeReport = document.getElementById('close-report');
 
+    // ROI Elements
+    const roiHours = document.getElementById('roi-hours');
+    const roiHoursVal = document.getElementById('roi-hours-val');
+    const roiMoney = document.getElementById('roi-money');
+    const roiTime = document.getElementById('roi-time');
+    
+    // Terminal UI Elements
+    const processQuestion = document.getElementById('process-question');
+    const processWrapper = document.getElementById('process-wrapper');
+    const dynIndustry = document.getElementById('dyn-industry');
+
     let selection = { rubro: '', proceso: '' };
     let currentLeadId = null;
+
+    // ROI Logic
+    if (roiHours) {
+        roiHours.addEventListener('input', (e) => {
+            const val = e.target.value;
+            roiHoursVal.innerText = val + 'h';
+            
+            // Assume average LatAm administrative cost: $10 USD/hour
+            // 75% estimated automation savings over 4 weeks
+            const savingsHours = val * 0.75 * 4;
+            const savingsMoney = savingsHours * 10;
+            
+            roiTime.innerText = Math.round(savingsHours) + ' hrs';
+            roiMoney.innerText = 'USD $' + Math.round(savingsMoney).toLocaleString();
+        });
+    }
 
     function checkSelection() {
         if (rubroSelect.value && procesoSelect.value) {
@@ -30,10 +57,24 @@ export function initAudit() {
         }
     }
 
-    rubroSelect?.addEventListener('change', checkSelection);
+    rubroSelect?.addEventListener('change', () => {
+        if (rubroSelect.value) {
+            if (processQuestion) {
+                processQuestion.style.display = 'block';
+                processQuestion.classList.add('blink'); 
+                setTimeout(() => processQuestion.classList.remove('blink'), 1500);
+            }
+            if (processWrapper) processWrapper.style.display = 'block';
+            checkSelection();
+        }
+    });
+
     procesoSelect?.addEventListener('change', checkSelection);
 
     nextBtn?.addEventListener('click', () => {
+        if (dynIndustry) {
+            dynIndustry.innerText = rubroSelect.value;
+        }
         steps[1].classList.remove('active');
         steps[2].classList.add('active');
     });
