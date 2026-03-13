@@ -1,4 +1,5 @@
-import { supabase } from './lib/supabase'
+import { supabase } from './lib/supabase.js';
+import { fetchAgentLogs } from './lib/agent-logs.js';
 
 // --- Auth Gate (PIN: 3687) ---
 const gateOverlay = document.getElementById('admin-gate');
@@ -550,19 +551,50 @@ window.openAgentEditor = (id) => {
     document.getElementById('edit-agent-prompt').value = agent.system_prompt || '';
     
     renderEditorSteps();
+    renderAgentLogs(agent.id);
     agentEditor.style.display = 'block';
     agentEditor.classList.add('active');
 };
 
 function renderEditorSteps() {
     if (!stepsContainer) return;
-    stepsContainer.innerHTML = currentEditingAgent.workflow_steps.map((stepObj, index) => `
+    const steps = currentEditingAgent.workflow_steps || [];
+    stepsContainer.innerHTML = steps.map((stepObj, index) => `
         <div class="step-item">
             <div class="step-number">${index + 1}</div>
             <input type="text" value="${stepObj.step}" onchange="updateStepText(${index}, this.value)" class="step-input">
             <button class="btn-icon" onclick="removeStep(${index})"><i data-lucide="trash-2"></i></button>
         </div>
     `).join('');
+    if (window.lucide) lucide.createIcons();
+}
+
+async function renderAgentLogs(agentId) {
+    const logsContainer = document.getElementById('agent-logs-container');
+    if (!logsContainer) return;
+    
+    logsContainer.innerHTML = '<p class="loading-state">Consultando logs...</p>';
+    
+    const logs = await fetchAgentLogs(agentId);
+    
+    if (logs.length === 0) {
+        logsContainer.innerHTML = '<p class="loading-state" style="opacity: 0.5;">No hay actividad registrada recientemente.</p>';
+        return;
+    }
+    
+    logsContainer.innerHTML = logs.map(log => `
+        <div class="log-entry ${log.status}">
+            <div class="log-time">${new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            <div class="log-content">
+                <div class="log-action">${log.action}</div>
+                ${log.details ? `<div class="log-details">${log.details}</div>` : ''}
+            </div>
+            <div class="log-status-icon">
+                <i data-lucide="${log.status === 'success' ? 'check-circle' : log.status === 'error' ? 'alert-circle' : 'info'}"></i>
+            </div>
+        </div>
+    `).join('');
+    
     if (window.lucide) lucide.createIcons();
 }
 

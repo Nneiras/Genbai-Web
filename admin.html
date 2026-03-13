@@ -208,6 +208,17 @@
                             <i data-lucide="plus"></i> Agregar Paso
                         </button>
                     </div>
+
+                    <div class="editor-section" style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                        <label style="display: flex; justify-content: space-between; align-items: center;">
+                            Monitor de Actividad
+                            <span class="status-badge" style="font-size: 0.7rem;">Últimas 50 tareas</span>
+                        </label>
+                        <div id="agent-logs-container" class="logs-display">
+                            <!-- Logs injected by JS -->
+                            <p class="loading-state">Cargando historial...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
