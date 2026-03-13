@@ -222,16 +222,21 @@ function renderLeads(leads) {
                 </td>
                 <td onclick="event.stopPropagation()">
                     <div class="action-btns">
+                        <!-- AI Agents Triggers -->
+                        <button onclick="event.stopPropagation(); runAgentOnLead('chatbot-admin', '${lead.id}')" class="btn-icon ai-btn" title="Ejecutar Atención IA" style="background: rgba(59, 130, 246, 0.1);"><i data-lucide="message-square"></i></button>
+                        <button onclick="event.stopPropagation(); runAgentOnLead('lead-strategist', '${lead.id}')" class="btn-icon ai-btn" title="Ejecutar Estrategia IA" style="background: rgba(245, 158, 11, 0.1);"><i data-lucide="zap"></i></button>
+                        <button onclick="event.stopPropagation(); runAgentOnLead('followup-specialist', '${lead.id}')" class="btn-icon ai-btn" title="Ejecutar Seguimiento IA" style="background: rgba(16, 185, 129, 0.1);"><i data-lucide="line-chart"></i></button>
+                        
                         <a href="mailto:${lead.email}" class="btn-icon" title="Enviar Email">
                             <i data-lucide="mail"></i>
                         </a>
                         <a href="https://wa.me/${lead.phone?.replace(/\D/g, '') || ''}" target="_blank" class="btn-icon" title="WhatsApp">
                             <i data-lucide="message-circle"></i>
                         </a>
-                        <button class="btn-icon btn-archive" onclick="archiveLead('${lead.id}')" title="Archivar">
+                        <button class="btn-icon btn-archive" onclick="event.stopPropagation(); archiveLead('${lead.id}')" title="Archivar">
                             <i data-lucide="archive"></i>
                         </button>
-                        <button class="btn-icon btn-delete" onclick="deleteLead('${lead.id}')" title="Eliminar">
+                        <button class="btn-icon btn-delete" onclick="event.stopPropagation(); deleteLead('${lead.id}')" title="Eliminar">
                             <i data-lucide="trash-2"></i>
                         </button>
                     </div>
