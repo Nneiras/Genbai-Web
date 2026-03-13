@@ -305,6 +305,7 @@
     width: 100%;
     margin: 1.5rem 0 0.5rem;
     -webkit-appearance: none;
+    appearance: none;
     background: rgba(255,255,255,0.1);
     height: 6px;
     border-radius: 3px;
