@@ -10,7 +10,7 @@
     display: grid;
     grid-template-columns: 1fr 1.1fr; /* Give slightly more room to the terminal */
     gap: 80px; /* Increase gap for better breathing room */
-    align-items: center;
+    align-items: flex-start;
 }
 
 .audit-content h2 {
@@ -369,7 +369,7 @@
 }
 
 .roi-value.accent {
-    color: var(--primary); /* Cyan for time */
+    color: #f8fafc; /* Professional neutral white for time */
 }
 
 /* Social Proof Badge */

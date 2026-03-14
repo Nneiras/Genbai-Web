@@ -115,7 +115,7 @@
           <div id="audit-steps" class="audit-steps term-body">
             <!-- Step 1: Industry & Process Selection -->
             <div id="step-1" class="step active term-step">
-              <div class="term-bot-msg">🤖 Inicializando auditoría. ¿A qué rubro pertenece tu empresa?</div>
+              <div class="term-bot-msg">Inicializando auditoría corporativa. ¿A qué rubro pertenece la empresa?</div>
               
               <div class="form-group term-input-group mt-2">
                 <select id="rubro-select" class="audit-select term-select">
@@ -131,7 +131,7 @@
                 </select>
               </div>
 
-              <div class="term-bot-msg mt-3" id="process-question" style="display: none;">🤖 Entendido. ¿Qué proceso principal buscas automatizar?</div>
+              <div class="term-bot-msg mt-3" id="process-question" style="display: none;">Entendido. ¿Qué proceso principal busca automatizar o escalar?</div>
               
               <div class="form-group term-input-group mt-2" id="process-wrapper" style="display: none;">
                 <select id="proceso-select" class="audit-select term-select">
@@ -144,16 +144,16 @@
                 </select>
               </div>
 
-              <button id="next-to-form" class="btn-primary term-btn mt-4" style="display: none; width: 100%;">⚡ Iniciar Escaneo de IA</button>
+              <button id="next-to-form" class="btn-primary term-btn mt-4" style="display: none; width: 100%;">Iniciar Diagnóstico de IA</button>
             </div>
 
             <!-- Step 2: Form -->
             <div id="step-2" class="step term-step">
-              <div class="term-bot-msg">🤖 Excelente. Procesando modelos para <span id="dyn-industry" style="color: var(--accent);">tu rubro</span>... Para enviarte el plan detallado, ¿cuál es tu nombre y email corporativo?</div>
+              <div class="term-bot-msg">Procesando modelos de negocio para <span id="dyn-industry" style="color: var(--primary);">su rubro</span>... Para enviar el plan estratégico detallado, confirme su nombre y correo corporativo.</div>
               <form id="audit-form" class="audit-form term-input-group mt-3">
                 <input type="text" id="audit-name" placeholder="Tu Nombre / Empresa" class="audit-input term-input" required>
                 <input type="email" id="audit-email" placeholder="Email corporativo" class="audit-input term-input" required>
-                <button type="submit" class="btn-primary term-btn mt-3">Desplegar Reporte 🚀</button>
+                <button type="submit" class="btn-primary term-btn mt-3">Desplegar Reporte</button>
               </form>
             </div>
 
