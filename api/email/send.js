@@ -31,9 +31,9 @@ export default async function handler(req, res) {
 
     // 2. Configurar cliente OAuth2
     const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5173/api/auth/google/callback'
+      process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_Client_ID,
+      process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_Client_Secret,
+      process.env.GOOGLE_REDIRECT_URI || 'https://tu-proyecto.vercel.app/api/auth/google/callback'
     );
 
     oauth2Client.setCredentials({ refresh_token: config.value.refresh_token });

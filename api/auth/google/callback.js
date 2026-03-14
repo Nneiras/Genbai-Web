@@ -7,8 +7,8 @@ export default async function handler(req, res) {
   }
 
   const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_Client_ID,
+    process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_Client_Secret,
     process.env.GOOGLE_REDIRECT_URI || 'https://tu-proyecto.vercel.app/api/auth/google/callback'
   );
 
