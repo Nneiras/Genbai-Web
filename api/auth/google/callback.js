@@ -40,13 +40,14 @@ export default async function handler(req, res) {
     }
 
     // Guardar tokens en la tabla system_config de Supabase
-    // NOTA: Usamos service_role key o RPC para saltar el RLS si es necesario, 
-    // pero anon_key + user session requeriría enviar un token de Supabase en la petición.
-    // Asumiremos que tenemos SUPABASE_SERVICE_ROLE_KEY cargada en Vercel para mayor seguridad.
-    const serviceClient = createClient(
-      process.env.VITE_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY
-    );
+    const supabaseUrl = getEnv('VITE_SUPABASE_URL') || getEnv('URL_SUPA_BASE') || getEnv('NEXT_PUBLIC_SUPABASE_URL');
+    const supabaseKey = getEnv('SUPABASE_SERVICE_ROLE_KEY') || getEnv('VITE_SUPABASE_ANON_KEY') || getEnv('SUPABASE_ANON_KEY') || getEnv('API_KEY_SUPA_BASE');
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Supabase credentials missing matching in Vercel. Need VITE_SUPABASE_URL or URL_SUPA_BASE');
+    }
+
+    const serviceClient = createClient(supabaseUrl, supabaseKey);
 
     const { error: dbError } = await serviceClient
       .from('system_config')

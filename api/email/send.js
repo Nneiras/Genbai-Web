@@ -13,11 +13,20 @@ export default async function handler(req, res) {
   }
 
   try {
+    const getEnv = (key) => {
+      const foundKey = Object.keys(process.env).find(k => k.toLowerCase() === key.toLowerCase());
+      return foundKey ? process.env[foundKey] : undefined;
+    };
+
     // 1. Obtener el Refresh Token de la Base de Datos (solo accesible para el sistema)
-    const serviceClient = createClient(
-      process.env.VITE_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY
-    );
+    const supabaseUrl = getEnv('VITE_SUPABASE_URL') || getEnv('URL_SUPA_BASE') || getEnv('NEXT_PUBLIC_SUPABASE_URL');
+    const supabaseKey = getEnv('SUPABASE_SERVICE_ROLE_KEY') || getEnv('VITE_SUPABASE_ANON_KEY') || getEnv('SUPABASE_ANON_KEY') || getEnv('API_KEY_SUPA_BASE');
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Supabase credentials missing matching in Vercel. Need VITE_SUPABASE_URL or URL_SUPA_BASE');
+    }
+
+    const serviceClient = createClient(supabaseUrl, supabaseKey);
 
     const { data: config, error: dbError } = await serviceClient
       .from('system_config')
@@ -30,10 +39,6 @@ export default async function handler(req, res) {
     }
 
     // 2. Configurar cliente OAuth2
-    const getEnv = (key) => {
-      const foundKey = Object.keys(process.env).find(k => k.toLowerCase() === key.toLowerCase());
-      return foundKey ? process.env[foundKey] : undefined;
-    };
 
     const clientId = getEnv('GOOGLE_CLIENT_ID');
     const clientSecret = getEnv('GOOGLE_CLIENT_SECRET');
