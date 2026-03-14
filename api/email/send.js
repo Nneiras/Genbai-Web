@@ -30,11 +30,18 @@ export default async function handler(req, res) {
     }
 
     // 2. Configurar cliente OAuth2
-    const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_Client_ID,
-      process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_Client_Secret,
-      process.env.GOOGLE_REDIRECT_URI || 'https://tu-proyecto.vercel.app/api/auth/google/callback'
-    );
+    const getEnv = (key) => {
+      const foundKey = Object.keys(process.env).find(k => k.toLowerCase() === key.toLowerCase());
+      return foundKey ? process.env[foundKey] : undefined;
+    };
+
+    const clientId = getEnv('GOOGLE_CLIENT_ID');
+    const clientSecret = getEnv('GOOGLE_CLIENT_SECRET');
+    const redirectUri = getEnv('GOOGLE_REDIRECT_URI') || 'https://tu-proyecto.vercel.app/api/auth/google/callback';
+
+    if (!clientId) throw new Error('Missing GOOGLE_CLIENT_ID in environment variables');
+
+    const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
 
     oauth2Client.setCredentials({ refresh_token: config.value.refresh_token });
 
