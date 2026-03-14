@@ -166,9 +166,12 @@
                             <i data-lucide="mail"></i> Sincronización Google Mail
                         </h3>
                         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Sincroniza tu cuenta para enviar propuestas directamente desde el panel.</p>
-                        <button class="btn-bulk btn-warning" style="width: auto;">
-                            <i data-lucide="refresh-cw"></i> Conectar con Google
-                        </button>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <button id="connect-google-btn" class="btn-bulk btn-warning" style="width: auto;">
+                                <i data-lucide="refresh-cw"></i> Conectar con Google
+                            </button>
+                            <span id="google-auth-status" style="font-size: 0.9rem; font-weight: 500;"></span>
+                        </div>
                     </div>
                     <div style="margin-bottom: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
                         <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">

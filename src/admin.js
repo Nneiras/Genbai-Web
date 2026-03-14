@@ -41,7 +41,59 @@ pinInput?.addEventListener('input', (e) => {
 // Initial Auth Check
 if (checkAuth()) {
     console.log('Admin Authenticated');
+    checkGoogleAuthStatus();
 }
+
+// --- Google Workspace Auth Logic ---
+async function checkGoogleAuthStatus() {
+    const statusEl = document.getElementById('google-auth-status');
+    const connectBtn = document.getElementById('connect-google-btn');
+    
+    // Check URL for recent auth attempts
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('google_auth') === 'success') {
+        alert('¡Google Workspace conectado exitosamente!');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (urlParams.get('google_auth') === 'error') {
+        alert('Error al conectar con Google: ' + urlParams.get('msg'));
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if (!statusEl) return;
+
+    try {
+        statusEl.innerText = 'Comprobando conexión...';
+        const res = await fetch('/api/auth/google/status');
+        const data = await res.json();
+        
+        if (data.connected) {
+            statusEl.innerText = '✅ Conectado y listo';
+            statusEl.style.color = '#10b981';
+            connectBtn.innerHTML = '<i data-lucide="check-circle"></i> Reconectar Cuenta';
+        } else {
+            statusEl.innerText = '❌ No conectado';
+            statusEl.style.color = '#ef4444';
+        }
+    } catch (e) {
+        statusEl.innerText = 'Estado desconocido';
+        console.error('Error fetching google status', e);
+    }
+}
+
+document.getElementById('connect-google-btn')?.addEventListener('click', async () => {
+    try {
+        const res = await fetch('/api/auth/google/url');
+        const data = await res.json();
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            alert('Error obteniendo URL de autorización.');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Error al iniciar conexión con Google Workspace.');
+    }
+});
 
 // --- Theme Management ---
 const themeToggle = document.getElementById('theme-toggle');
