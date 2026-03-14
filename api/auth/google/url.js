@@ -12,7 +12,10 @@ export default async function handler(req, res) {
 
   const clientId = getEnv('GOOGLE_CLIENT_ID');
   const clientSecret = getEnv('GOOGLE_CLIENT_SECRET');
-  const redirectUri = getEnv('GOOGLE_REDIRECT_URI') || 'https://tu-proyecto.vercel.app/api/auth/google/callback';
+  
+  const protocol = req.headers['x-forwarded-proto'] || (req.connection.encrypted ? 'https' : 'http');
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  const redirectUri = getEnv('GOOGLE_REDIRECT_URI') || `${protocol}://${host}/api/auth/google/callback`;
 
   if (!clientId) {
     return res.status(500).json({ error: 'Missing GOOGLE_CLIENT_ID in Vercel environment variables' });
