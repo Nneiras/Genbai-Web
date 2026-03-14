@@ -149,7 +149,7 @@ export function initAudit() {
                 
                 <div class="projection-chart">
                     <h4>Proyección de Eficiencia</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px;">Reducción estimada de carga operativa manual.</p>
+                    <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">Reducción estimada de carga operativa manual.</p>
                     <div class="chart-bars">
                         <div class="bar-container">
                             <div class="bar before"></div>
@@ -181,7 +181,7 @@ export function initAudit() {
                     <div id="quote-actions">
                         <p style="margin-bottom: 1.5rem; font-weight: 500;">¿Te gustaría implementar este plan?</p>
                         <button id="cta-quote" class="btn-primary" style="padding: 1.2rem 3rem; font-size: 1.1rem;">Solicitar Cotización Detallada</button>
-                        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 1rem;">Recibirás el presupuesto formal en tu casilla de correo.</p>
+                        <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); margin-top: 1rem;">Recibirás el presupuesto formal en tu casilla de correo.</p>
                     </div>
                 </div>
             </div>

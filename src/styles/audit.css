@@ -141,6 +141,7 @@
     max-width: 900px;
     margin: 0 auto;
     background: #0f1115;
+    color: #ffffff; /* FORCE TEXT TO BE VISIBLE IN LIGHT MODE */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 40px;
     padding: 60px;
@@ -179,7 +180,7 @@
 }
 
 .report-section h4 {
-    color: var(--accent);
+    color: #00f2ff; /* Fixed cyan for tech feel */
     margin-bottom: 16px;
     font-size: 1.2rem;
 }
@@ -206,7 +207,7 @@
     content: '';
     position: absolute;
     top: 0; left: 0; width: 100%; height: 4px;
-    background: var(--accent);
+    background: #00f2ff;
 }
 
 .metric-value {
@@ -224,7 +225,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--text-dim);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 /* Projection Chart */
@@ -249,6 +250,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
+    height: 100%;
     gap: 10px;
 }
 
@@ -261,14 +264,14 @@
 
 .bar.before { background: #475569; height: 100%; }
 .bar.after { 
-    background: var(--accent); 
-    box-shadow: 0 0 20px var(--accent-glow);
+    background: #00f2ff; 
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
     height: 0; /* Animated by JS */
 }
 
 .bar-label {
     font-size: 0.75rem;
-    color: var(--text-dim);
+    color: rgba(255, 255, 255, 0.6);
     white-space: nowrap;
 }
 
