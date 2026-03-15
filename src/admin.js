@@ -878,6 +878,10 @@ window.runAgentOnLead = async (agentId, leadId) => {
  */
 window.reviewDraft = async (leadId) => {
     try {
+        const lead = allLeads.find(l => l.id === leadId);
+        document.getElementById('send-draft-btn').dataset.email = lead?.email || '';
+        document.getElementById('send-draft-btn').dataset.leadId = leadId;
+
         document.getElementById('review-email-modal').style.display = 'flex';
         document.getElementById('review-loading').style.display = 'block';
         document.getElementById('review-content').style.display = 'none';
@@ -940,36 +944,55 @@ document.getElementById('discard-draft-btn')?.addEventListener('click', async ()
     }
 });
 
-document.getElementById('send-draft-btn')?.addEventListener('click', async () => {
+document.getElementById('send-draft-btn')?.addEventListener('click', async (e) => {
     const draftId = document.getElementById('review-draft-id').value;
     const subject = document.getElementById('review-subject').value;
     const body = document.getElementById('review-body').value;
+    const toEmail = e.target.dataset.email || e.target.closest('button').dataset.email;
+    const leadId = e.target.dataset.leadId || e.target.closest('button').dataset.leadId;
     
     if (!draftId) return;
+    if (!toEmail) {
+        alert("El lead no tiene un correo electrónico válido configurado.");
+        return;
+    }
 
     try {
         const btn = document.getElementById('send-draft-btn');
         btn.innerHTML = '<i data-lucide="loader" class="spin"></i> Enviando...';
         btn.disabled = true;
 
-        // Note: For now, we just mark it as sent in the database.
-        // We will need a Vercel endpoint `/api/email/send` that actually connects to Gmail.
+        // 1. Enviar el correo a través de Google API
+        const sendRes = await fetch('/api/email/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ to: toEmail, subject, body })
+        });
         
-        // 1. Update the draft with edits
+        const sendData = await sendRes.json();
+        if (!sendRes.ok) {
+            throw new Error(sendData.error || 'Error al conectar con Google Mail API');
+        }
+
+        // 2. Marcar el borrador como enviado en la base de datos
         const { error: updateError } = await supabase
                 .from('agent_results')
                 .update({ 
                     status: 'sent', 
-                    content: { subject, body } // Save the edited version
+                    content: { subject, body } // Guardar versión final editada
                 })
                 .eq('id', draftId);
                 
         if (updateError) throw updateError;
         
+        // 3. Registrar el envío en communications log para el tracker
+        await logAgentAction('human', 'Envío de Email (Manual/Aprobado)', subject, 'completed', leadId);
+        
         document.getElementById('review-email-modal').style.display = 'none';
-        alert('¡Correo enviado con éxito! (Simulado por ahora, hasta conectar Gmail)');
+        alert('¡Correo enviado con éxito a través de Gmail!');
         
     } catch (err) {
+        console.error("Error envío:", err);
         alert('Error al enviar correo: ' + err.message);
     } finally {
         const btn = document.getElementById('send-draft-btn');
