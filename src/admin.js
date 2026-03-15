@@ -634,11 +634,17 @@ function renderEditorSteps() {
             
             ${isEmail 
                 ? `
+                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.8rem; line-height: 1.4;">
+                    <strong>¿Qué hace este paso?</strong> Redacta un correo electrónico personalizado basándose en la plantilla que definas abajo. Utilizará todo el contexto del lead (nombre, rubro) más el contexto acumulado de análisis previos para adaptarlo antes de guardar el borrador en la base de datos para tu revisión.
+                </p>
                 <input type="text" value="${stepObj.subject || ''}" onchange="updateStepField(${index}, 'subject', this.value)" class="step-input" placeholder="Asunto del correo..." style="margin-bottom: 0.5rem; width: 100%;">
                 <textarea onchange="updateStepField(${index}, 'base_template', this.value)" class="prompt-textarea" placeholder="Plantilla base del correo. Usa variables como {nombre_lead} o {rubro}..." style="min-height: 80px;">${stepObj.base_template || ''}</textarea>
                 `
                 : `
-                <input type="text" value="${stepObj.action_name || stepObj.step || ''}" onchange="updateStepField(${index}, 'action_name', this.value)" class="step-input" placeholder="Describir acción a realizar..." style="width: 100%;">
+                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.8rem; line-height: 1.4;">
+                    <strong>¿Qué hace este paso?</strong> Llama al modelo de IA simulando capacidades de razonamiento para analizar al Lead según las directivas del sistema (ej. "Revisar perfil en LinkedIn", "Extraer puntos de dolor"). El resultado de este pensamiento se guarda internamente y puede ser leído por los siguientes pasos para tomar mejores decisiones o redactar mails más precisos.
+                </p>
+                <input type="text" value="${stepObj.action_name || stepObj.step || ''}" onchange="updateStepField(${index}, 'action_name', this.value)" class="step-input" placeholder="Describir acción a realizar (ej: 'Analizar potencial de compra')..." style="width: 100%;">
                 `
             }
         </div>
