@@ -198,6 +198,55 @@
                     <!-- Dynamic agent cards injected by JS -->
                     <div class="glass kpi-card loading-state">Cargando agentes...</div>
                 </div>
+
+                <!-- Agent Editor Panel (Hidden by default) -->
+                <div id="agent-editor" class="agent-editor-panel glass" style="display: none;">
+                    <div class="editor-header">
+                        <div class="editor-title-box">
+                            <h3 id="edit-agent-name">Nombre del Agente</h3>
+                            <span id="edit-agent-id" class="agent-id-badge">ID: ---</span>
+                        </div>
+                        <div class="editor-actions">
+                            <button id="save-agent" class="btn-bulk btn-warning">Guardar Cambios</button>
+                            <button id="close-agent-editor" class="btn-icon"><i data-lucide="x"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-body">
+                        <div class="editor-section">
+                            <label>Personalidad y Prompt de Sistema</label>
+                            <textarea id="edit-agent-prompt" placeholder="Define cómo actúa el agente..." class="prompt-textarea"></textarea>
+                        </div>
+                        
+                        <div class="editor-section">
+                            <label>Flujo de Trabajo (Workflows)</label>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Crea los pasos del agente. Si seleccionas "Enviar Email", podrás definir una plantilla base.</p>
+                            <div id="steps-container" class="steps-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
+                                <!-- Steps injected by JS -->
+                            </div>
+                            
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <button id="add-step-analysis" class="btn-bulk btn-outline">
+                                    <i data-lucide="brain-circuit"></i> Paso de Análisis
+                                </button>
+                                <button id="add-step-email" class="btn-bulk btn-warning">
+                                    <i data-lucide="mail"></i> Plantilla de Email
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="editor-section" style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                            <label style="display: flex; justify-content: space-between; align-items: center;">
+                                Monitor de Actividad
+                                <span class="status-badge" style="font-size: 0.7rem;">Últimas 50 tareas</span>
+                            </label>
+                            <div id="agent-logs-container" class="logs-display">
+                                <!-- Logs injected by JS -->
+                                <p class="loading-state">Cargando historial...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Config View -->
@@ -233,55 +282,8 @@
                     </div>
                 <button class="btn-icon" style="width: auto; padding: 0.5rem 1rem; background: #ef4444; color: white;">Cerrar Sesión</button>
             </div>
+        </div>
 
-            <!-- Agent Editor Panel (Hidden by default) -->
-            <div id="agent-editor" class="agent-editor-panel glass" style="display: none;">
-                <div class="editor-header">
-                    <div class="editor-title-box">
-                        <h3 id="edit-agent-name">Nombre del Agente</h3>
-                        <span id="edit-agent-id" class="agent-id-badge">ID: ---</span>
-                    </div>
-                    <div class="editor-actions">
-                        <button id="save-agent" class="btn-bulk btn-warning">Guardar Cambios</button>
-                        <button id="close-agent-editor" class="btn-icon"><i data-lucide="x"></i></button>
-                    </div>
-                </div>
-                
-                <div class="editor-body">
-                    <div class="editor-section">
-                        <label>Personalidad y Prompt de Sistema</label>
-                        <textarea id="edit-agent-prompt" placeholder="Define cómo actúa el agente..." class="prompt-textarea"></textarea>
-                    </div>
-                    
-                    <div class="editor-section">
-                        <label>Flujo de Trabajo (Workflows)</label>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Crea los pasos del agente. Si seleccionas "Enviar Email", podrás definir una plantilla base.</p>
-                        <div id="steps-container" class="steps-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
-                            <!-- Steps injected by JS -->
-                        </div>
-                        
-                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <button id="add-step-analysis" class="btn-bulk btn-outline">
-                                <i data-lucide="brain-circuit"></i> Paso de Análisis
-                            </button>
-                            <button id="add-step-email" class="btn-bulk btn-warning">
-                                <i data-lucide="mail"></i> Plantilla de Email
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="editor-section" style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                        <label style="display: flex; justify-content: space-between; align-items: center;">
-                            Monitor de Actividad
-                            <span class="status-badge" style="font-size: 0.7rem;">Últimas 50 tareas</span>
-                        </label>
-                        <div id="agent-logs-container" class="logs-display">
-                            <!-- Logs injected by JS -->
-                            <p class="loading-state">Cargando historial...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </main>
     </div>
 
