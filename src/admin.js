@@ -752,9 +752,9 @@ async function fetchGlobalActivity() {
     try {
         activityList.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Cargando actividad conectando con el servidor...</td></tr>';
         
-        // Use agent_logs for now to simulate the dashboard and show historical data
+        // Use communications table for the dashboard
         const { data, error } = await supabase
-            .from('agent_logs')
+            .from('communications')
             .select('*, leads(name, id), ai_agents(name)')
             .order('created_at', { ascending: false })
             .limit(100);
@@ -770,11 +770,8 @@ async function fetchGlobalActivity() {
 
         activityList.innerHTML = data.map(log => {
             const time = new Date(log.created_at).toLocaleString();
-            let actionType = log.action;
-            let typeBadge = 'info';
-            
-            if (log.action.toLowerCase().includes('email') || log.action.toLowerCase().includes('mensaje')) typeBadge = 'email';
-            if (log.action.toLowerCase().includes('análisis') || log.action.toLowerCase().includes('procesando')) typeBadge = 'analysis';
+            let actionType = log.subject || log.type;
+            let typeBadge = log.type; // 'email', 'analysis', 'system'
 
             const agentName = log.ai_agents?.name || 'Sistema';
             const leadName = log.leads?.name || 'Múltiples/Sistema';
@@ -790,7 +787,7 @@ async function fetchGlobalActivity() {
                         ${actionType}
                     </div>
                 </td>
-                <td><span class="status-badge status-${log.status === 'error' ? 'closed' : 'new'}">${log.status}</span></td>
+                <td><span class="status-badge status-${(log.status === 'failed' || log.status === 'error') ? 'closed' : 'new'}">${log.status}</span></td>
                 <td>
                     <button class="btn-icon-text" onclick="showCommModal('${log.id}')" style="font-size: 0.8rem; padding: 0.25rem 0.5rem;">
                         Ver Detalles
@@ -810,12 +807,13 @@ async function fetchGlobalActivity() {
 
 window.showCommModal = (logId) => {
     const log = window.globalLogsData?.find(l => l.id === logId);
-    document.getElementById('comm-modal-title').innerText = `Detalles de: ${log.action}`;
-    // Format JSON details nicely if they exist, otherwise show plain text
-    let contentToShow = log.details || 'Sin detalles adicionales registrados.';
+    document.getElementById('comm-modal-title').innerText = `Detalles: ${log.subject || log.type}`;
+    
+    let contentToShow = log.content || 'Sin contenido registrado.';
+    // Formatear si es un draft/json string
     try {
-        if (typeof log.details === 'string' && log.details.startsWith('{')) {
-            const parsed = JSON.parse(log.details);
+        if (typeof log.content === 'string' && log.content.startsWith('{')) {
+            const parsed = JSON.parse(log.content);
             contentToShow = JSON.stringify(parsed, null, 2);
         }
     } catch(e) {}
