@@ -283,9 +283,9 @@ function renderLeads(leads) {
                         <button onclick="event.stopPropagation(); runAgentOnLead('lead-strategist', '${lead.id}')" class="btn-icon ai-btn" title="Ejecutar Estrategia IA" style="background: rgba(245, 158, 11, 0.1);"><i data-lucide="zap"></i></button>
                         <button onclick="event.stopPropagation(); runAgentOnLead('followup-specialist', '${lead.id}')" class="btn-icon ai-btn" title="Ejecutar Seguimiento IA" style="background: rgba(16, 185, 129, 0.1);"><i data-lucide="line-chart"></i></button>
                         
-                        <a href="mailto:${lead.email}" class="btn-icon" title="Enviar Email">
+                        <button onclick="event.stopPropagation(); reviewDraft('${lead.id}')" class="btn-icon" title="Revisar y Enviar Email">
                             <i data-lucide="mail"></i>
-                        </a>
+                        </button>
                         <a href="https://wa.me/${lead.phone?.replace(/\D/g, '') || ''}" target="_blank" class="btn-icon" title="WhatsApp">
                             <i data-lucide="message-circle"></i>
                         </a>
@@ -874,3 +874,109 @@ window.runAgentOnLead = async (agentId, leadId) => {
         alert(`Error al ejecutar el agente: ${err.message}`);
     }
 };
+
+/**
+ * Reviews generated drafts for a specific lead
+ */
+window.reviewDraft = async (leadId) => {
+    try {
+        document.getElementById('review-email-modal').style.display = 'flex';
+        document.getElementById('review-loading').style.display = 'block';
+        document.getElementById('review-content').style.display = 'none';
+        document.getElementById('review-empty').style.display = 'none';
+
+        const { data: drafts, error } = await supabase
+            .from('agent_results')
+            .select('*')
+            .eq('lead_id', leadId)
+            .eq('output_type', 'email_draft')
+            .eq('status', 'draft')
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) throw error;
+
+        document.getElementById('review-loading').style.display = 'none';
+
+        if (drafts && drafts.length > 0) {
+            const draft = drafts[0];
+            const content = draft.content || {};
+            
+            document.getElementById('review-draft-id').value = draft.id;
+            document.getElementById('review-subject').value = content.subject || '';
+            document.getElementById('review-body').value = content.body || '';
+            
+            document.getElementById('review-content').style.display = 'block';
+        } else {
+            document.getElementById('review-empty').style.display = 'block';
+        }
+    } catch (err) {
+        console.error('Error fetching draft:', err);
+        alert('Error al buscar los borradores: ' + err.message);
+        document.getElementById('review-email-modal').style.display = 'none';
+    }
+};
+
+document.getElementById('close-review-modal')?.addEventListener('click', () => {
+    document.getElementById('review-email-modal').style.display = 'none';
+});
+
+document.getElementById('discard-draft-btn')?.addEventListener('click', async () => {
+    const draftId = document.getElementById('review-draft-id').value;
+    if (!draftId) return;
+    
+    if(confirm('¿Seguro que quieres descartar y eliminar este borrador?')) {
+        try {
+            const { error } = await supabase
+                .from('agent_results')
+                .update({ status: 'discarded' })
+                .eq('id', draftId);
+                
+            if (error) throw error;
+            
+            document.getElementById('review-email-modal').style.display = 'none';
+            alert('Borrador descartado.');
+        } catch (err) {
+            alert('Error al descartar: ' + err.message);
+        }
+    }
+});
+
+document.getElementById('send-draft-btn')?.addEventListener('click', async () => {
+    const draftId = document.getElementById('review-draft-id').value;
+    const subject = document.getElementById('review-subject').value;
+    const body = document.getElementById('review-body').value;
+    
+    if (!draftId) return;
+
+    try {
+        const btn = document.getElementById('send-draft-btn');
+        btn.innerHTML = '<i data-lucide="loader" class="spin"></i> Enviando...';
+        btn.disabled = true;
+
+        // Note: For now, we just mark it as sent in the database.
+        // We will need a Vercel endpoint `/api/email/send` that actually connects to Gmail.
+        
+        // 1. Update the draft with edits
+        const { error: updateError } = await supabase
+                .from('agent_results')
+                .update({ 
+                    status: 'sent', 
+                    content: { subject, body } // Save the edited version
+                })
+                .eq('id', draftId);
+                
+        if (updateError) throw updateError;
+        
+        document.getElementById('review-email-modal').style.display = 'none';
+        alert('¡Correo enviado con éxito! (Simulado por ahora, hasta conectar Gmail)');
+        
+    } catch (err) {
+        alert('Error al enviar correo: ' + err.message);
+    } finally {
+        const btn = document.getElementById('send-draft-btn');
+        btn.innerHTML = '<i data-lucide="send"></i> Enviar a Contacto';
+        btn.disabled = false;
+        if (window.lucide) lucide.createIcons();
+    }
+});
