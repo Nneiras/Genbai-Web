@@ -145,6 +145,8 @@ function switchView(targetId) {
         const titles = {
             '#dashboard': 'Panel de Control',
             '#leads': 'Gestión de Leads',
+            '#agents': 'Agentes IA',
+            '#activity': 'Actividad Global',
             '#config': 'Configuración'
         };
         pageTitle.innerText = titles[targetId] || 'GENBAI Admin';
@@ -162,11 +164,13 @@ navItems.forEach(item => {
 
 const initialHash = window.location.hash || '#dashboard';
 switchView(initialHash);
-if (initialHash === '#config') fetchAgents();
+if (initialHash === '#agents') fetchAgents();
+if (initialHash === '#activity') fetchGlobalActivity();
 
 window.addEventListener('hashchange', () => {
     switchView(window.location.hash);
-    if (window.location.hash === '#config') fetchAgents();
+    if (window.location.hash === '#agents') fetchAgents();
+    if (window.location.hash === '#activity') fetchGlobalActivity();
 });
 
 /**
@@ -616,15 +620,36 @@ window.openAgentEditor = (id) => {
 function renderEditorSteps() {
     if (!stepsContainer) return;
     const steps = currentEditingAgent.workflow_steps || [];
-    stepsContainer.innerHTML = steps.map((stepObj, index) => `
-        <div class="step-item">
-            <div class="step-number">${index + 1}</div>
-            <input type="text" value="${stepObj.step}" onchange="updateStepText(${index}, this.value)" class="step-input">
-            <button class="btn-icon" onclick="removeStep(${index})"><i data-lucide="trash-2"></i></button>
+    stepsContainer.innerHTML = steps.map((stepObj, index) => {
+        const isEmail = stepObj.type === 'email';
+        return `
+        <div class="step-item" style="flex-direction: column; align-items: stretch; background: var(--bg-secondary); border-radius: 8px; padding: 1rem; position: relative;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500; font-size: 0.9rem;">
+                    <div class="step-number" style="position: static;">${index + 1}</div>
+                    ${isEmail ? '<i data-lucide="mail" style="color: var(--accent);"></i> Email Template' : '<i data-lucide="brain-circuit" style="color: var(--text-secondary);"></i> Acción de Análisis'}
+                </div>
+                <button class="btn-icon" onclick="removeStep(${index})" style="color: #ef4444;"><i data-lucide="trash-2"></i></button>
+            </div>
+            
+            ${isEmail 
+                ? `
+                <input type="text" value="${stepObj.subject || ''}" onchange="updateStepField(${index}, 'subject', this.value)" class="step-input" placeholder="Asunto del correo..." style="margin-bottom: 0.5rem; width: 100%;">
+                <textarea onchange="updateStepField(${index}, 'base_template', this.value)" class="prompt-textarea" placeholder="Plantilla base del correo. Usa variables como {nombre_lead} o {rubro}..." style="min-height: 80px;">${stepObj.base_template || ''}</textarea>
+                `
+                : `
+                <input type="text" value="${stepObj.action_name || stepObj.step || ''}" onchange="updateStepField(${index}, 'action_name', this.value)" class="step-input" placeholder="Describir acción a realizar..." style="width: 100%;">
+                `
+            }
         </div>
-    `).join('');
+        `;
+    }).join('');
     if (window.lucide) lucide.createIcons();
 }
+
+window.updateStepField = (index, field, value) => {
+    currentEditingAgent.workflow_steps[index][field] = value;
+};
 
 async function renderAgentLogs(agentId) {
     const logsContainer = document.getElementById('agent-logs-container');
@@ -655,17 +680,20 @@ async function renderAgentLogs(agentId) {
     if (window.lucide) lucide.createIcons();
 }
 
-window.updateStepText = (index, value) => {
-    currentEditingAgent.workflow_steps[index].step = value;
-};
-
 window.removeStep = (index) => {
     currentEditingAgent.workflow_steps.splice(index, 1);
     renderEditorSteps();
 };
 
-document.getElementById('add-step')?.addEventListener('click', () => {
-    currentEditingAgent.workflow_steps.push({ step: 'Nuevo paso...', active: true });
+document.getElementById('add-step-analysis')?.addEventListener('click', () => {
+    if(!currentEditingAgent) return;
+    currentEditingAgent.workflow_steps.push({ type: 'analysis', action_name: 'Nueva acción de análisis...' });
+    renderEditorSteps();
+});
+
+document.getElementById('add-step-email')?.addEventListener('click', () => {
+    if(!currentEditingAgent) return;
+    currentEditingAgent.workflow_steps.push({ type: 'email', subject: 'Nuevo Contacto', base_template: 'Escribe aquí el cuerpo del mensaje...' });
     renderEditorSteps();
 });
 
@@ -702,74 +730,141 @@ document.getElementById('save-agent')?.addEventListener('click', async () => {
         renderAgents(allAgents);
         document.getElementById('close-agent-editor').click();
         alert('Configuración guardada correctamente.');
-    } catch (err) {
+} catch (err) {
         console.error('Error saving agent:', err);
         alert('Error al guardar la configuración.');
     }
 });
 
-// Update view logic to fetch agents removed as it is now in the nav section
+/**
+ * Global Activity Dashboard Logic
+ */
+async function fetchGlobalActivity() {
+    const activityList = document.getElementById('activity-list');
+    if (!activityList) return;
 
+    try {
+        activityList.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Cargando actividad conectando con el servidor...</td></tr>';
+        
+        // Use agent_logs for now to simulate the dashboard and show historical data
+        const { data, error } = await supabase
+            .from('agent_logs')
+            .select('*, leads(name, id), ai_agents(name)')
+            .order('created_at', { ascending: false })
+            .limit(100);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            activityList.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">No hay actividad registrada aún.</td></tr>';
+            return;
+        }
+
+        window.globalLogsData = data; // Cache for modal
+
+        activityList.innerHTML = data.map(log => {
+            const time = new Date(log.created_at).toLocaleString();
+            let actionType = log.action;
+            let typeBadge = 'info';
+            
+            if (log.action.toLowerCase().includes('email') || log.action.toLowerCase().includes('mensaje')) typeBadge = 'email';
+            if (log.action.toLowerCase().includes('análisis') || log.action.toLowerCase().includes('procesando')) typeBadge = 'analysis';
+
+            const agentName = log.ai_agents?.name || 'Sistema';
+            const leadName = log.leads?.name || 'Múltiples/Sistema';
+
+            return `
+            <tr>
+                <td style="font-size: 0.85rem; color: var(--text-secondary);">${time}</td>
+                <td><span class="status-badge" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">${agentName}</span></td>
+                <td style="font-weight: 500;">${leadName}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="${typeBadge === 'email' ? 'mail' : typeBadge === 'analysis' ? 'brain-circuit' : 'info'}" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
+                        ${actionType}
+                    </div>
+                </td>
+                <td><span class="status-badge status-${log.status === 'error' ? 'closed' : 'new'}">${log.status}</span></td>
+                <td>
+                    <button class="btn-icon-text" onclick="showCommModal('${log.id}')" style="font-size: 0.8rem; padding: 0.25rem 0.5rem;">
+                        Ver Detalles
+                    </button>
+                </td>
+            </tr>
+            `;
+        }).join('');
+
+        if (window.lucide) lucide.createIcons();
+
+    } catch (e) {
+        console.error('Error fetching global activity', e);
+        activityList.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 2rem;">Error al cargar actividad.</td></tr>';
+    }
+}
+
+window.showCommModal = (logId) => {
+    const log = window.globalLogsData?.find(l => l.id === logId);
+    document.getElementById('comm-modal-title').innerText = `Detalles de: ${log.action}`;
+    // Format JSON details nicely if they exist, otherwise show plain text
+    let contentToShow = log.details || 'Sin detalles adicionales registrados.';
+    try {
+        if (typeof log.details === 'string' && log.details.startsWith('{')) {
+            const parsed = JSON.parse(log.details);
+            contentToShow = JSON.stringify(parsed, null, 2);
+        }
+    } catch(e) {}
+
+    document.getElementById('comm-modal-content').innerText = contentToShow;
+    document.getElementById('comm-modal').style.display = 'flex';
+};
+
+document.getElementById('close-comm-modal')?.addEventListener('click', () => {
+    document.getElementById('comm-modal').style.display = 'none';
+});
+
+// Update view logic to attach listeners to the correct new buttons if needed.
 fetchLeads();
 console.log('GENBAI Admin Initialized');
+
 /**
- * Simulates Agent Execution on a Lead
+ * Executes an Agent on a Lead using the Backend API
  */
 window.runAgentOnLead = async (agentId, leadId) => {
     try {
-        // 1. Fetch Agent Config
-        const { data: agent, error: agentError } = await supabase
-            .from('ai_agents')
-            .select('*')
-            .eq('id', agentId)
-            .single();
+        // UI Feedback
+        await logAgentAction(agentId, 'Iniciando', `Enviando petición a la API para el lead: ${leadId}`, 'info', leadId);
         
-        if (agentError || !agent) throw new Error('Agente no encontrado');
+        // Disable buttons temporarily
+        const buttons = document.querySelectorAll('.ai-btn');
+        buttons.forEach(b => b.style.opacity = '0.5');
 
-        // 2. Start Logs
-        await logAgentAction(agentId, 'Iniciando procesamiento', `Ejecutando flujo para el lead: ${leadId}`, 'info', leadId);
+        const response = await fetch('/api/agents/execute', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ agentId, leadId })
+        });
 
-        // 3. Simulate Workflow Steps
-        const steps = agent.workflow_steps || [];
-        for (const step of steps) {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for realism
-            await logAgentAction(agentId, `Paso completado: ${step.step}`, 'Procesando datos del lead...', 'success', leadId);
+        const data = await response.json();
+
+        buttons.forEach(b => b.style.opacity = '1');
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Error en la ejecución del agente.');
         }
 
-        // 4. Generate Result Draft
-        let resultData = {};
-        let outputType = '';
-
-        if (agentId === 'chatbot-admin') {
-            outputType = 'chat_response';
-            resultData = { body: "Hola, gracias por interesarte en GENBAI. He analizado tu consulta y te sugiero...", subject: "Respuesta de GENBAI" };
-        } else if (agentId === 'lead-strategist') {
-            outputType = 'roi_pitch';
-            resultData = { body: "Propuesta de valor: Automatizando tus cobros con QuickPay podrías ahorrar 15hs semanales.", subject: "Tu Estrategia GENBAI" };
-        } else {
-            outputType = 'followup_draft';
-            resultData = { body: "¿Pudiste revisar la info? Sigo aquí para ayudarte con la implementación.", subject: "Seguimiento GENBAI" };
-        }
-
-        const { error: resultError } = await supabase
-            .from('agent_results')
-            .insert([{
-                lead_id: leadId,
-                agent_id: agentId,
-                output_type: outputType,
-                content: resultData,
-                status: 'draft'
-            }]);
-
-        if (resultError) throw resultError;
-
-        await logAgentAction(agentId, 'Proceso Finalizado', 'Resultado guardado como Borrador para revisión.', 'success', leadId);
+        // Success
+        await logAgentAction(agentId, 'Proceso Finalizado', data.message || 'Flujo ejecutado con éxito.', 'success', leadId);
+        alert(`¡Agente ejecutado correctamente!`);
         
-        alert(`¡Agente ${agent.name} finalizó! Revisa los resultados en el lead.`);
-        fetchLeads(); // Refresh to show the badge if we add one
+        // Refresh views to see new drafts or logs
+        fetchLeads();
+        if (window.location.hash === '#activity') fetchGlobalActivity();
+
     } catch (err) {
         console.error('Error in agent execution:', err);
         await logAgentAction(agentId, 'Error en ejecución', err.message, 'error', leadId);
-        alert('Error al ejecutar el agente');
+        alert(`Error al ejecutar el agente: ${err.message}`);
     }
 };

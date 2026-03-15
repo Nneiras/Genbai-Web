@@ -139,6 +139,46 @@
                 </section>
             </div>
 
+            <!-- Global Activity Dashboard -->
+            <div id="view-activity" class="admin-view" style="display: none;">
+                <div class="section-header">
+                    <h2>Monitor de Actividad Global</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Registro en tiempo real de correos enviados, análisis y decisiones de todos los agentes.</p>
+                </div>
+                
+                <div class="table-container glass">
+                    <table class="leads-table" id="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Agente</th>
+                                <th>Lead/Cliente</th>
+                                <th>Acción Tomada</th>
+                                <th>Estado</th>
+                                <th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activity-list">
+                            <tr><td colspan="6" style="text-align: center; padding: 2rem;">Cargando actividad...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal para detalles de comunicación -->
+                <div id="comm-modal" class="comm-modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;">
+                    <div class="glass" style="background: var(--bg-primary); padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; color: var(--text-primary);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                            <h3 id="comm-modal-title" style="margin: 0;">Detalles de la Acción</h3>
+                            <button id="close-comm-modal" class="btn-icon"><i data-lucide="x"></i></button>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Contenido Generado / Enviado</span>
+                            <div id="comm-modal-content" style="margin-top: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border); font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Config View -->
             <div id="view-config" class="admin-view">
                 <div class="section-header">
@@ -203,13 +243,20 @@
                     </div>
                     
                     <div class="editor-section">
-                        <label>Flujo de Trabajo (Pasos)</label>
-                        <div id="steps-container" class="steps-list">
+                        <label>Flujo de Trabajo (Workflows)</label>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Crea los pasos del agente. Si seleccionas "Enviar Email", podrás definir una plantilla base.</p>
+                        <div id="steps-container" class="steps-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
                             <!-- Steps injected by JS -->
                         </div>
-                        <button id="add-step" class="btn-icon-text">
-                            <i data-lucide="plus"></i> Agregar Paso
-                        </button>
+                        
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button id="add-step-analysis" class="btn-bulk btn-outline">
+                                <i data-lucide="brain-circuit"></i> Paso de Análisis
+                            </button>
+                            <button id="add-step-email" class="btn-bulk btn-warning">
+                                <i data-lucide="mail"></i> Plantilla de Email
+                            </button>
+                        </div>
                     </div>
 
                     <div class="editor-section" style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
