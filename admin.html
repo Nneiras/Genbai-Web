@@ -270,6 +270,63 @@
             </div>
         </div>
 
+            <!-- Config View -->
+            <div id="view-config" class="admin-view" style="display: none;">
+                <div class="section-header">
+                    <h2>Configuración y Facturación</h2>
+                </div>
+                <div class="glass kpi-card">
+                    <p>Integración con Stripe próximamente.</p>
+                </div>
+            </div>
+
+            <!-- Modals (Global Level inside Main Content) -->
+            <!-- Modal para detalles de comunicación -->
+            <div id="comm-modal" class="comm-modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;">
+                <div class="glass" style="background: var(--bg-primary); padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; color: var(--text-primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                        <h3 id="comm-modal-title" style="margin: 0;">Detalles de la Acción</h3>
+                        <button id="close-comm-modal" class="btn-icon"><i data-lucide="x"></i></button>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Contenido Generado / Enviado</span>
+                        <div id="comm-modal-content" style="margin-top: 0.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border); font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para Revisión y Envío de Emails Generados -->
+            <div id="review-email-modal" class="comm-modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;">
+                <div class="glass" style="background: var(--bg-primary); padding: 2rem; border-radius: 12px; width: 90%; max-width: 700px; color: var(--text-primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                        <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="mail"></i> Revisar y Enviar Email</h3>
+                        <button id="close-review-modal" class="btn-icon"><i data-lucide="x"></i></button>
+                    </div>
+                    
+                    <div id="review-loading" style="text-align: center; padding: 2rem; display: none;">Cargando borrador...</div>
+                    <div id="review-empty" style="text-align: center; padding: 2rem; display: none; color: var(--text-secondary);">No hay borradores pendientes para este lead. Debes ejecutar un Agente que tenga un paso de Email.</div>
+
+                    <div id="review-content" style="display: none;">
+                        <input type="hidden" id="review-draft-id">
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">Asunto</label>
+                            <input type="text" id="review-subject" class="search-input" style="width: 100%; border: 1px solid var(--border);">
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">Cuerpo del Mensaje</label>
+                            <textarea id="review-body" class="prompt-textarea" style="min-height: 250px; font-family: monospace; font-size: 0.9rem; line-height: 1.5;"></textarea>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                            <button id="discard-draft-btn" class="btn-bulk btn-danger">Descartar</button>
+                            <button id="send-draft-btn" class="btn-bulk btn-warning"><i data-lucide="send"></i> Enviar a Contacto</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
